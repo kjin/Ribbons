@@ -35,6 +35,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Graphics\Canvas.cs" />
     <Compile Include="Program.cs" />
