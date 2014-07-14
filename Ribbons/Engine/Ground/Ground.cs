@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 using FarseerPhysics.Common;
 using FarseerPhysics.Collision.Shapes;
@@ -9,23 +10,36 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
 using Ribbons.Utils;
-using Ribbons.Engine;
-    
+using Ribbons.Graphics;
+
 
 namespace Ribbons.Engine.Ground
 {
 
     public enum GroundType { Ground, Miasma };
 
+    #region UserData
     public struct GroundUserData
     {
         public GroundType groundType;
     }
+    #endregion
 
     public class Ground
     {
+        #region Fields
+        //for drawing
+        private PolygonF shape;
+        private GroundType type;
+
+        #endregion
+
+        #region Constructor
         public Ground(World world, PolygonF polygon, GroundType type)
         {
+            this.shape = polygon;
+            this.type = type;
+
             GroundUserData userData;
             userData.groundType = type;
 
@@ -42,5 +56,18 @@ namespace Ribbons.Engine.Ground
                 body.IsSensor = true;
             }
         }
+        #endregion
+
+        #region Draw
+        public void Draw(Canvas canvas)
+        {
+            List<Vector2> vectors = shape.points;
+            for (int i = 0; i + 1 < vectors.Count; i++)
+            {
+                canvas.DrawLine(Color.DarkOliveGreen, 5, vectors[i], vectors[i + 1]);
+            }
+            canvas.DrawLine(Color.DarkOliveGreen, 5, vectors[vectors.Count - 1], vectors[0]);
+        }
+        #endregion
     }
 }

@@ -10,38 +10,44 @@ using FarseerPhysics.Factories;
 
 using Microsoft.Xna.Framework;
 
+using Ribbons.Graphics;
+
 namespace Ribbons.Engine
 {
+
+    #region UserData
+    public struct PlayerUserData
+    {
+        public Player player;
+    }
+    #endregion
+
     public class Player
     {
         #region Fields
+        // keep track for drawing
+        List<Vector2> boundingBox;
 
-        #endregion
-
-        #region UserData
-        public struct PlayerUserData
-        {
-            public Player player;
-        }
         #endregion
 
         #region Constructor
-        public Player(World world)
+        public Player(World world, Vector2 position)
         {
             PlayerUserData userData;
             userData.player = this;
 
-            Body body = BodyFactory.CreateBody(world, userData);
+            Body body = BodyFactory.CreateBody(world, position, 0, userData);
             Fixture fixture = body.CreateFixture(CreateShape(), userData);
 
             fixture.Friction = PlayerConstants.FRICTION;
 
-            body.IsStatic = true;
+            body.IsStatic = false;
+            body.FixedRotation = true;
         }
 
         private Shape CreateShape()
         {
-            Vertices vertices = new Vertices();
+            List<Vector2> vertices = new List<Vector2>();
 
             float x = PlayerConstants.WIDTH / 2;
             float y = 0.5f;
@@ -52,7 +58,9 @@ namespace Ribbons.Engine
             vertices.Add(new Vector2(x, -y + PlayerConstants.SLANT));
             vertices.Add(new Vector2(x, y));
 
-            return new PolygonShape(vertices, PlayerConstants.DENSITY);
+            boundingBox = vertices;
+
+            return new PolygonShape(new Vertices(vertices), PlayerConstants.DENSITY);
         }
         #endregion
 
@@ -81,9 +89,13 @@ namespace Ribbons.Engine
         #endregion
 
         #region Draw
-        public void Draw()
+        public void Draw(Canvas canvas)
         {
-
+            for(int i = 0; i+1 < boundingBox.Count; i++)
+            {
+                canvas.DrawLine(Color.OrangeRed, 5, boundingBox[i], boundingBox[i+1]);
+            }
+            canvas.DrawLine(Color.OrangeRed, 5, boundingBox[boundingBox.Count-1], boundingBox[0]);
         }
         #endregion
     }
