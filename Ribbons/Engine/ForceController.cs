@@ -10,7 +10,7 @@ namespace Ribbons.Engine
         //private InputController inputController;
         private Player player;
 
-        public ForceController(/*InputController inputController*/, Player player)
+        public ForceController(/*InputController inputController*/ Player player)
         {
             //inputController
         }

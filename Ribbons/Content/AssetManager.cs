@@ -59,8 +59,7 @@ namespace Ribbons.Content
         AssetCollection<SpriteFont> fonts;
         AssetCollection<Effect> effects;
         AssetCollection<Text> text;
-
-        int NUM_MIASMA_FRAMES = 120;
+        AssetCollection<TextDictionary> dicts;
 
         /// <summary>
         /// Constructs a new instance of AssetManager.
@@ -73,6 +72,7 @@ namespace Ribbons.Content
             effects = new AssetCollection<Effect>("Effects");
             fonts = new AssetCollection<SpriteFont>("Fonts");
             text = new AssetCollection<Text>("Text");
+            dicts = new AssetCollection<TextDictionary>("Text");
         }
 
         /// <summary>
@@ -96,6 +96,17 @@ namespace Ribbons.Content
             LoadNormalContent<Effect>(content, effects);
             LoadNormalContent<SpriteFont>(content, fonts);
             LoadNormalContent<Text>(content, text);
+            List<string> textAssetNames = text.GetAssetNames();
+            foreach (string t in textAssetNames)
+            {
+                try
+                {
+                    dicts.AddAsset(t, new TextDictionary(text.GetAsset(t)));
+                }
+                catch
+                {
+                }
+            }
 
             DateTime after = DateTime.Now;
             Console.WriteLine("loaded in {0} seconds.", TimeSpan.FromTicks(after.Ticks - before.Ticks).TotalSeconds);
@@ -164,6 +175,12 @@ namespace Ribbons.Content
         /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
         /// <returns>The asset associated with the asset name provided.</returns>
         public Text GetText(string assetName) { return text.GetAsset(assetName); }
+        /// <summary>
+        /// Gets a dictionary object based on its asset name.
+        /// </summary>
+        /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
+        /// <returns>The asset associated with the asset name provided.</returns>
+        public TextDictionary GetDictionary(string assetName) { return dicts.GetAsset(assetName); }
         /// <summary>
         /// Gets a texture based on its asset name.
         /// </summary>

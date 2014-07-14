@@ -73,7 +73,7 @@ namespace Ribbons.Context
 
         public void Draw(GameTime gameTime)
         {
-            
+            currentContext.Draw(gameTime);
         }
     }
 }
