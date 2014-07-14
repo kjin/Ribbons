@@ -7,10 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using Ribbons.Graphics;
-using Ribbons.Utils;
-using Ribbons.Input;
-using Ribbons.Content;
+using Ribbons.Context;
 #endregion
 
 namespace Ribbons
@@ -23,9 +20,7 @@ namespace Ribbons
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Canvas canvas;
-        Camera camera;
-        InputController input;
+        ContextManager contextManager;
 
         public RibbonsGame()
             : base()
@@ -54,12 +49,7 @@ namespace Ribbons
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            AssetManager assets = new AssetManager();
-            assets.LoadContent(Content, GraphicsDevice);
-            canvas = new Canvas(GraphicsDevice, spriteBatch);
-            camera = new Camera();
-
-            input = new InputController(assets);
+            contextManager = new ContextManager(Content, GraphicsDevice, spriteBatch);
 
             // TODO: use this.Content to load your game content here
         }
@@ -80,24 +70,7 @@ namespace Ribbons
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
-            // TODO: Add your update logic here
-            camera.Update();
-            input.Update();
-            Vector3 v = new Vector3();
-            if (input.MenuLeft.Pressed)
-                v.X -= 2;
-            if (input.MenuRight.Pressed)
-                v.X += 2;
-            if (input.MenuUp.Pressed)
-                v.Y -= 2;
-            if (input.MenuDown.Pressed)
-                v.Y += 2;
-            if (input.MenuForward.Pressed)
-                camera.Scale *= 1.1f;
-            if (input.MenuBackward.Pressed)
-                camera.Scale /= 1.1f;
-            camera.Position += v;
+            contextManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -109,11 +82,7 @@ namespace Ribbons
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-
-            canvas.BeginDraw(camera);
-            GraphicsHelper.DrawGrid(canvas, new RectangleF(-800, 800, -800, 800), 2, 50);
-            canvas.EndDraw();
-
+            contextManager.Draw(gameTime);
             base.Draw(gameTime);
         }
     }

@@ -38,6 +38,8 @@
     <Compile Include="Content\AssetManager.cs" />
     <Compile Include="Content\TextDictionary.cs" />
     <Compile Include="Content\TextReader.cs" />
+    <Compile Include="Context\ContextManager.cs" />
+    <Compile Include="Context\GameContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Input\InputControl.cs" />
     <Compile Include="Input\InputController.cs" />
