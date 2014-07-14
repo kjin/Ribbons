@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using FarseerPhysics.Common;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
@@ -23,15 +24,17 @@ namespace Ribbons.Engine.Ground
 
     public class Ground
     {
-        public Ground(World world, PolygonF shape, GroundType type)
+        public Ground(World world, PolygonF polygon, GroundType type)
         {
             GroundUserData userData;
             userData.groundType = type;
 
-            Vertices vertices = new Vertices(shape.points);
+            Vertices vertices = new Vertices(polygon.points);
 
             Body body = BodyFactory.CreateBody(world, userData);
-            FixtureFactory.AttachPolygon(vertices, GroundConstants.GROUND_DENSITY, body, userData);
+            Fixture fixture = body.CreateFixture(new PolygonShape(vertices, GroundConstants.DENSITY), userData);
+
+            fixture.Friction = GroundConstants.FRICTION;
             body.IsStatic = true;
 
             if (type == GroundType.Miasma)

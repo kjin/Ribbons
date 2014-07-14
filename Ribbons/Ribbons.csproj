@@ -35,8 +35,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\ForceController.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Engine\PhysicsConstants.cs" />
+    <Compile Include="Engine\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Graphics\Canvas.cs" />
     <Compile Include="Program.cs" />
