@@ -2,9 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons", "Ribbons\Ribbons.csproj", "{16D17806-2EB4-4678-BEE4-D3EA497A24EE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7} = {0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics MonoGame", "Farseer Physics Engine 3.5\Farseer Physics MonoGame.csproj", "{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}"
 EndProject
@@ -12,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcessor", "TextProces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonsContent", "RibbonsContent\RibbonsContent\RibbonsContent.csproj", "{C96FE9B3-F4FE-44E4-8FD6-FB77DFEF3532}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "RibbonsContentContent", "RibbonsContent\RibbonsContentContent\RibbonsContentContent.contentproj", "{37389893-6D3D-4799-93A3-77F81FC20D7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonsContentContent", "RibbonsContent\RibbonsContentContent\RibbonsContentContent.contentproj", "{37389893-6D3D-4799-93A3-77F81FC20D7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -136,46 +133,55 @@ Global
 		{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}.Windows8|x86.ActiveCfg = Release|x86
 		{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}.Windows8|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Android|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|Any CPU.Build.0 = Debug|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|x86.ActiveCfg = Debug|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Debug|x86.Build.0 = Debug|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.iOS|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Linux|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.OSX|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.PSM|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Release|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|x86.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows|x86.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows8|Any CPU.ActiveCfg = Release|x86
+		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows8|Any CPU.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows8|Mixed Platforms.ActiveCfg = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{1C39DD3A-25D2-495E-B4B9-D1687113DDFE}.Windows8|x86.ActiveCfg = Release|x86

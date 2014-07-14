@@ -10,6 +10,7 @@ namespace Ribbons.Graphics
     public class Canvas
     {
         SpriteBatch spriteBatch;
+        Camera camera;
         //1x1 texture used in drawing lines and boxes
         Texture2D square1x1;
 
@@ -27,11 +28,13 @@ namespace Ribbons.Graphics
         public void BeginDraw(Camera camera)
         {
             spriteBatch.Begin(0, null, null, null, null, null, camera.World);
+            this.camera = camera;
         }
 
         public void EndDraw()
         {
             spriteBatch.End();
+            this.camera = null;
         }
 
         /// <summary>

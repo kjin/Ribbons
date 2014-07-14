@@ -43,7 +43,6 @@
     <Compile Include="Input\InputController.cs" />
     <Compile Include="RibbonsGame.cs" />
     <Compile Include="Engine\ForceController.cs" />
-    <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Engine\PhysicsConstants.cs" />
     <Compile Include="Engine\Player.cs" />
     <Compile Include="Graphics\Canvas.cs" />
