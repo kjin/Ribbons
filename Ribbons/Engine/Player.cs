@@ -28,6 +28,9 @@ namespace Ribbons.Engine
         // keep track for drawing
         List<Vector2> boundingBox;
 
+        // body!
+        Body body;
+
         #endregion
 
         #region Constructor
@@ -36,7 +39,7 @@ namespace Ribbons.Engine
             PlayerUserData userData;
             userData.player = this;
 
-            Body body = BodyFactory.CreateBody(world, position, 0, userData);
+            body = BodyFactory.CreateBody(world, position, 0, userData);
             Fixture fixture = body.CreateFixture(CreateShape(), userData);
 
             fixture.Friction = PlayerConstants.FRICTION;
@@ -67,12 +70,12 @@ namespace Ribbons.Engine
         #region ForceController Methods
         public void MoveLeft(float speed)
         {
-
+            body.ApplyForce(new Vector2(-speed, 0));
         }
 
         public void MoveRight(float speed)
         {
-
+            body.ApplyForce(new Vector2(speed, 0));
         }
 
         public void Jump()
