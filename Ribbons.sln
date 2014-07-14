@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons", "Ribbons\Ribbons.csproj", "{16D17806-2EB4-4678-BEE4-D3EA497A24EE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7} = {0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics MonoGame", "Farseer Physics Engine 3.5\Farseer Physics MonoGame.csproj", "{0AAD36E3-51A5-4A07-AB60-5C8A66BD38B7}"
 EndProject
