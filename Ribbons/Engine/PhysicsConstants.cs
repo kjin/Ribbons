@@ -5,6 +5,11 @@ using System.Text;
 
 namespace Ribbons.Engine
 {
+    public class WorldConstants
+    {
+        public const float GRAVITY = -1.0f;
+    }
+
     public class GroundConstants
     {
         public const float DENSITY = 1.0f;
