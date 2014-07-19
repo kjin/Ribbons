@@ -40,6 +40,7 @@
     <Compile Include="Content\TextReader.cs" />
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\GameContext.cs" />
+    <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Graphics\GraphicsConstants.cs" />
     <Compile Include="Graphics\Sprite.cs" />
@@ -81,15 +82,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\RibbonsContent\RibbonsContent\RibbonsContent.csproj">
-      <Project>{c96fe9b3-f4fe-44e4-8fd6-fb77dfef3532}</Project>
-      <Name>RibbonsContent</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Farseer Physics Engine 3.5\Farseer Physics MonoGame.csproj">
       <Project>{0aad36e3-51a5-4a07-ab60-5c8a66bd38b7}</Project>
       <Name>Farseer Physics MonoGame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RibbonsContent\RibbonsContent\RibbonsContent.csproj">
+      <Project>{c96fe9b3-f4fe-44e4-8fd6-fb77dfef3532}</Project>
+      <Name>RibbonsContent</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

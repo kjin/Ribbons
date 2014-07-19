@@ -187,4 +187,7 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# Assets with large footprints
 XACT/
+Textures/
+SFX/

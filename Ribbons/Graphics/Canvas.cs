@@ -27,7 +27,7 @@ namespace Ribbons.Graphics
 
         public void BeginDraw(Camera camera)
         {
-            spriteBatch.Begin(0, null, null, null, null, null, camera.World);
+            spriteBatch.Begin();//0, null, null, null, null, null, camera.World);
             this.camera = camera;
         }
 
@@ -35,6 +35,19 @@ namespace Ribbons.Graphics
         {
             spriteBatch.End();
             this.camera = null;
+        }
+
+        public void DrawSprite(Sprite sprite)
+        {
+            spriteBatch.Draw(sprite.Texture.Texture,
+                             sprite.Position,
+                             sprite.Texture.GetFrame(sprite.Frame),
+                             sprite.Color,
+                             sprite.Rotation,
+                             AnchorHelper.ComputeAnchorOrigin(sprite.Anchor, sprite.Texture.Dimensions),
+                             sprite.Scale * sprite.Texture.Scale,
+                             SpriteEffects.None,
+                             0);
         }
 
         /// <summary>
