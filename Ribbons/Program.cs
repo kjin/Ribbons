@@ -16,9 +16,9 @@ namespace Ribbons
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            using (var game = new RibbonsGame())
+            using (var game = new RibbonsGame(args))
                 game.Run();
         }
     }

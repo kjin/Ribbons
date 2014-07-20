@@ -7,13 +7,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Ribbons.Graphics
 {
+    /// <summary>
+    /// A class used for drawing sprites.
+    /// </summary>
     public class Canvas
     {
         SpriteBatch spriteBatch;
-        Camera camera;
         //1x1 texture used in drawing lines and boxes
         Texture2D square1x1;
+        List<CoordinateTransform> transformationStack;
 
+        /// <summary>
+        /// Constructs a new Canvas object.
+        /// </summary>
+        /// <param name="graphicsDevice">The GraphicsDevice object associated with the game.</param>
+        /// <param name="spriteBatch">The SpriteBatch object used for drawing.</param>
         public Canvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
             this.spriteBatch = spriteBatch;
@@ -23,31 +31,66 @@ namespace Ribbons.Graphics
             Color[] data = new Color[1];
             data[0] = Color.White;
             square1x1.SetData<Color>(data);
+            transformationStack = new List<CoordinateTransform>(4);
         }
 
-        public void BeginDraw(Camera camera)
+        /// <summary>
+        /// Begins a SpriteBatch operation.
+        /// </summary>
+        public void BeginDraw()
         {
             spriteBatch.Begin();//0, null, null, null, null, null, camera.World);
-            this.camera = camera;
         }
 
+        /// <summary>
+        /// Ends a SpriteBatch operation.
+        /// </summary>
         public void EndDraw()
         {
             spriteBatch.End();
-            this.camera = null;
         }
 
+        /// <summary>
+        /// Pushes a coordinate transform onto the canvas's stack of transforms.
+        /// </summary>
+        /// <param name="transform">The coordinate transform to push.</param>
+        public void PushTransform(CoordinateTransform transform)
+        {
+            transformationStack.Add(transform);
+        }
+
+        /// <summary>
+        /// Pops the uppermost coordinate transform from the canvas's stack of transforms.
+        /// </summary>
+        public void PopTransform()
+        {
+            transformationStack.RemoveAt(transformationStack.Count - 1);
+        }
+
+        /// <summary>
+        /// Draws a sprite to the screen, taking into account all of the coordinate
+        /// transforms on the canvas's stack.
+        /// </summary>
+        /// <param name="sprite">The sprite to draw.</param>
         public void DrawSprite(Sprite sprite)
         {
+            Vector2 position = sprite.Position;
+            float rotation = sprite.Rotation;
+            Vector2 scale = sprite.Scale * sprite.Texture.Scale;
+            for (int i = 0; i < transformationStack.Count; i++)
+                transformationStack[i].Transform(ref position, ref rotation, ref scale);
             spriteBatch.Draw(sprite.Texture.Texture,
-                             sprite.Position,
+                             position,
                              sprite.Texture.GetFrame(sprite.Frame),
                              sprite.Color,
-                             sprite.Rotation,
+                             rotation,
                              AnchorHelper.ComputeAnchorOrigin(sprite.Anchor, sprite.Texture.Dimensions),
-                             sprite.Scale * sprite.Texture.Scale,
+                             scale,
                              SpriteEffects.None,
                              0);
+#if DEBUG
+            //Console.WriteLine();
+#endif
         }
 
         /// <summary>
@@ -64,9 +107,14 @@ namespace Ribbons.Graphics
             float length = diff.Length();
             spriteBatch.Draw(square1x1, p1, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
         }
+
+        /// <summary>
+        /// The SpriteBatch object used for drawing.
+        /// </summary>
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
     }
 
-    public class Camera
+    /*public class Camera
     {
         public Vector3 Position { get; set; }
         public Vector3 Rotation { get; set; }
@@ -86,5 +134,5 @@ namespace Ribbons.Graphics
         {
             World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix.CreateTranslation(Position);
         }
-    }
+    }*/
 }

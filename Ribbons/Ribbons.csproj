@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{16D17806-2EB4-4678-BEE4-D3EA497A24EE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ribbons</RootNamespace>
     <AssemblyName>Ribbons</AssemblyName>
@@ -34,15 +34,22 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Content\AssetManager.cs" />
     <Compile Include="Content\TextDictionary.cs" />
     <Compile Include="Content\TextReader.cs" />
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\GameContext.cs" />
+    <Compile Include="Context\SandboxContext.cs" />
     <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
+    <Compile Include="Graphics\Anchor.cs" />
+    <Compile Include="Graphics\CoordinateTransform.cs" />
     <Compile Include="Graphics\GraphicsConstants.cs" />
+    <Compile Include="Graphics\AnimatedTexture.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Input\InputControl.cs" />
     <Compile Include="Input\InputController.cs" />

@@ -70,7 +70,7 @@ namespace Ribbons.Graphics
         /// <summary>
         /// Gets the scale of the sprite.
         /// </summary>
-        public Vector2 Scale { get { return scale; } }
+        public float Scale { get { return scale; } }
 
         /// <summary>
         /// Returns a bounding rectangle for the specified frame.
@@ -90,12 +90,12 @@ namespace Ribbons.Graphics
         /// </summary>
         public Texture2D Texture { get { return texture; } }
 
-        public static AnimatedTexture Build(AssetManager assets, string assetName, int startFrame = 0)
+        public static AnimatedTexture Build(AssetManager assets, string assetName)
         {
             int columns = 1;
             int rows = 1;
             float scale = 1;
-            TextDictionary td = assets.GetDictionary("graphics.txt");
+            TextDictionary td = assets.GetDictionary("graphics");
             if (td.CheckPropertyExists(assetName, "columns"))
                 columns = td.LookupInt32(assetName, "columns");
             if (td.CheckPropertyExists(assetName, "rows"))

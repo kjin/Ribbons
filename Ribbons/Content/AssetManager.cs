@@ -59,6 +59,8 @@ namespace Ribbons.Content
         AssetCollection<SpriteFont> fonts;
         AssetCollection<Effect> effects;
         AssetCollection<Text> text;
+        //Post-processed assets
+        AssetCollection<AnimatedTexture> animatedTextures;
         AssetCollection<TextDictionary> dicts;
 
         /// <summary>
@@ -72,6 +74,7 @@ namespace Ribbons.Content
             effects = new AssetCollection<Effect>("Effects");
             fonts = new AssetCollection<SpriteFont>("Fonts");
             text = new AssetCollection<Text>("Text");
+            animatedTextures = new AssetCollection<AnimatedTexture>("Textures");
             dicts = new AssetCollection<TextDictionary>("Text");
         }
 
@@ -97,27 +100,20 @@ namespace Ribbons.Content
             LoadNormalContent<SpriteFont>(content, fonts);
             LoadNormalContent<Text>(content, text);
             List<string> textAssetNames = text.GetAssetNames();
+            //TODO: Change this awful way of importing things
             foreach (string t in textAssetNames)
             {
-                try
-                {
-                    dicts.AddAsset(t, new TextDictionary(text.GetAsset(t)));
-                }
-                catch
-                {
-                }
+                try { dicts.AddAsset(t, new TextDictionary(text.GetAsset(t))); }
+                catch { }
             }
-
+            List<string> textureAssetNames = textures.GetAssetNames();
+            foreach (string t in textureAssetNames)
+            {
+                animatedTextures.AddAsset(t, AnimatedTexture.Build(this, t));
+            }
+            //for benchmarking, i guess
             DateTime after = DateTime.Now;
             Console.WriteLine("loaded in {0} seconds.", TimeSpan.FromTicks(after.Ticks - before.Ticks).TotalSeconds);
-            //load sprites
-            /*string[] spriteFiles = GetNames<Sprite>(sprites);
-            foreach (string item in spriteFiles)
-            {
-                Texture2D texture = content.Load<Texture2D>(item);
-                Sprite sprite = new Sprite(texture);
-                sprites.AddAsset(item.Substring(sprites.Directory.Length + 1), sprite);
-            }*/
         }
 
         private static string[] GetNames<T>(AssetCollection<T> collection) where T : class
@@ -187,5 +183,11 @@ namespace Ribbons.Content
         /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
         /// <returns>The asset associated with the asset name provided.</returns>
         public Texture2D GetTexture(string assetName) { return textures.GetAsset(assetName); }
+        /// <summary>
+        /// Gets an animated texture based on its asset name.
+        /// </summary>
+        /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
+        /// <returns>The asset associated with the asset name provided.</returns>
+        public AnimatedTexture GetAnimatedTexture(string assetName) { return animatedTextures.GetAsset(assetName); }
     }
 }

@@ -19,7 +19,6 @@ namespace Ribbons.Context
         World world;
         Player player;
         List<Ground> ground;
-        Camera camera;
 
         public override void Initialize()
         {
@@ -35,7 +34,6 @@ namespace Ribbons.Context
             PolygonF polygon;
             polygon.points = rectangle;
             ground.Add(new Ground(world, polygon, GroundType.Ground));
-            camera = new Camera();
         }
 
         public override void Dispose()
@@ -50,7 +48,7 @@ namespace Ribbons.Context
 
         public override void Draw(GameTime gameTime)
         {
-            Canvas.BeginDraw(camera);
+            Canvas.BeginDraw();
             player.Draw(Canvas);
             foreach (Ground g in ground)
             {

@@ -21,12 +21,17 @@ namespace Ribbons
         SpriteBatch spriteBatch;
 
         ContextManager contextManager;
+        string initialContext;
 
-        public RibbonsGame()
+        public RibbonsGame(string[] args)
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            if (args.Length > 0)
+                initialContext = "Ribbons.Context." + args[0] + "Context";
+            else
+                initialContext = "Ribbons.Context.SandboxContext";
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Ribbons
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             contextManager = new ContextManager(Content, GraphicsDevice, spriteBatch);
-            contextManager.SetInitialContext(new TestGameplayContext());
+            contextManager.SetInitialContext((GameContext)Activator.CreateInstance(Type.GetType(initialContext)));
 
             // TODO: use this.Content to load your game content here
         }
