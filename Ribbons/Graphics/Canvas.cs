@@ -16,6 +16,7 @@ namespace Ribbons.Graphics
         //1x1 texture used in drawing lines and boxes
         Texture2D square1x1;
         List<CoordinateTransform> transformationStack;
+        bool displayDebugInformation;
 
         /// <summary>
         /// Constructs a new Canvas object.
@@ -32,6 +33,7 @@ namespace Ribbons.Graphics
             data[0] = Color.White;
             square1x1.SetData<Color>(data);
             transformationStack = new List<CoordinateTransform>(4);
+            displayDebugInformation = false;
         }
 
         /// <summary>
@@ -79,17 +81,39 @@ namespace Ribbons.Graphics
             Vector2 scale = sprite.Scale * sprite.Texture.Scale;
             for (int i = 0; i < transformationStack.Count; i++)
                 transformationStack[i].Transform(ref position, ref rotation, ref scale);
+            Rectangle sourceRectangle = sprite.Texture.GetFrame(sprite.Frame);
+            Vector2 origin = AnchorHelper.ComputeAnchorOrigin(sprite.Anchor, sprite.Texture.Dimensions * sprite.Texture.Scale);
             spriteBatch.Draw(sprite.Texture.Texture,
                              position,
-                             sprite.Texture.GetFrame(sprite.Frame),
+                             sourceRectangle,
                              sprite.Color,
                              rotation,
-                             AnchorHelper.ComputeAnchorOrigin(sprite.Anchor, sprite.Texture.Dimensions),
+                             origin,
                              scale,
                              SpriteEffects.None,
                              0);
 #if DEBUG
-            //Console.WriteLine();
+            if (displayDebugInformation)
+            {
+                Console.WriteLine("spriteBatch.Draw called:\n" +
+                                  "            Texture: {0} ({1}x{2})\n" +
+                                  "           Position: {3}\n" +
+                                  "    SourceRectangle: {4}\n" +
+                                  "              Color: {5}\n" +
+                                  "           Rotation: {6}\n" +
+                                  "             Origin: {7} ({8})\n" +
+                                  "              Scale: {9}",
+                                  sprite.Texture.Name,
+                                  sprite.Texture.Texture.Width,
+                                  sprite.Texture.Texture.Height,
+                                  position,
+                                  sourceRectangle,
+                                  sprite.Color,
+                                  rotation,
+                                  origin,
+                                  sprite.Anchor,
+                                  scale);
+            }
 #endif
         }
 
@@ -112,6 +136,8 @@ namespace Ribbons.Graphics
         /// The SpriteBatch object used for drawing.
         /// </summary>
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
+
+        public bool DisplayDebugInformation { get { return displayDebugInformation; } set { displayDebugInformation = value; } }
     }
 
     /*public class Camera

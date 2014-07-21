@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using Ribbons.Context;
+using Ribbons.Graphics;
 #endregion
 
 namespace Ribbons
@@ -32,6 +33,8 @@ namespace Ribbons
                 initialContext = "Ribbons.Context." + args[0] + "Context";
             else
                 initialContext = "Ribbons.Context.SandboxContext";
+            graphics.PreferredBackBufferWidth = GraphicsConstants.VIEWPORT_WIDTH;
+            graphics.PreferredBackBufferHeight = GraphicsConstants.VIEWPORT_HEIGHT;
         }
 
         /// <summary>

@@ -31,9 +31,12 @@ namespace Ribbons.Graphics
         Vector2 dimensions; //uniform scale uses dimensions.Y
         float scale;
 
-        public UITransform(Vector2 dimensions)
+        /// <summary>
+        /// Constructs a new UITransform object.
+        /// </summary>
+        public UITransform()
         {
-            this.dimensions = dimensions;
+            dimensions = GraphicsConstants.VIEWPORT_DIMENSIONS;
             scale = dimensions.Y / REFERENCE_DIMENSIONS.Y;
         }
 
@@ -45,5 +48,49 @@ namespace Ribbons.Graphics
             //we don't transform rotation.
             scale *= this.scale;
         }
+    }
+
+    /// <summary>
+    /// Maps textures expressed in gameplay coordinates
+    /// to screen coordinates, based on the center position
+    /// of the "camera".
+    /// </summary>
+    public class GameplayTransform : CoordinateTransform
+    {
+        Vector2 viewportDimensions;
+        Vector2 center;
+        float zoom;
+        float pixelsPerUnit;
+
+        /// <summary>
+        /// Constructs a new GameplayTransform object, which simulates a virtual "camera".
+        /// </summary>
+        /// <param name="center">The center position of the camera.</param>
+        /// <param name="zoom">How much the camera is zoomed.</param>
+        public GameplayTransform(Vector2 center, float zoom)
+        {
+            this.viewportDimensions = GraphicsConstants.VIEWPORT_DIMENSIONS;
+            this.center = center;
+            this.zoom = zoom;
+            this.pixelsPerUnit = GraphicsConstants.PIXELS_PER_UNIT;
+        }
+
+        public void Transform(ref Vector2 position, ref float rotation, ref Vector2 scale)
+        {
+            position -= center;
+            position *= zoom * pixelsPerUnit;
+            position.Y *= -1;
+            //we don't transform rotation. yet.
+            scale *= zoom;
+        }
+
+        /// <summary>
+        /// Gets or sets the center position of the camera.
+        /// </summary>
+        public Vector2 Center { get { return center; } set { center = value; } }
+        /// <summary>
+        /// Gets or sets the camera's zoom.
+        /// </summary>
+        public float Zoom { get { return zoom; } set { zoom = value; } }
     }
 }

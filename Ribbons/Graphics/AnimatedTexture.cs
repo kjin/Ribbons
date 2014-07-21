@@ -21,6 +21,7 @@ namespace Ribbons.Graphics
         int rows;
         int columns;
         int frames;
+        string name;
 
         /// <summary>
         /// Create a new animated Sprite object, where frames are arranged on a grid in row-major order.
@@ -30,7 +31,7 @@ namespace Ribbons.Graphics
         /// <param name="texture">The texture on which this sprite is based.</param>
         /// <param name="columns">The number of columns of frames in the texture.</param>
         /// <param name="rows">The number of rows of frames in the texture.</param>
-        AnimatedTexture(Texture2D texture, int columns = 1, int rows = 1, float scale = 1)
+        AnimatedTexture(string assetName, Texture2D texture, int columns = 1, int rows = 1, float scale = 1)
         {
             this.scale = scale;
             this.texture = texture;
@@ -41,6 +42,7 @@ namespace Ribbons.Graphics
             this.rows = rows;
             this.columns = columns;
             this.frames = rows * columns;
+            this.name = assetName;
         }
 
         /// <summary>
@@ -71,6 +73,10 @@ namespace Ribbons.Graphics
         /// Gets the scale of the sprite.
         /// </summary>
         public float Scale { get { return scale; } }
+        /// <summary>
+        /// Gets the name of the sprite.
+        /// </summary>
+        public string Name { get { return name; } }
 
         /// <summary>
         /// Returns a bounding rectangle for the specified frame.
@@ -102,7 +108,7 @@ namespace Ribbons.Graphics
                 rows = td.LookupInt32(assetName, "rows");
             if (td.CheckPropertyExists(assetName, "scale"))
                 scale = td.LookupSingle(assetName, "scale");
-            AnimatedTexture sprite = new AnimatedTexture(assets.GetTexture(assetName), columns, rows, scale);
+            AnimatedTexture sprite = new AnimatedTexture(assetName, assets.GetTexture(assetName), columns, rows, scale);
             return sprite;
         }
     }

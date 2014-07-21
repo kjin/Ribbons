@@ -15,7 +15,7 @@ namespace Ribbons.Context
         public override void Initialize()
         {
             sprite = new Sprite(AssetManager.GetAnimatedTexture("wetfloorsign"));
-            transform = new UITransform(new Vector2(1280, 720));
+            transform = new UITransform(GraphicsConstants.VIEWPORT_DIMENSIONS);
         }
 
         public override void Dispose()
@@ -32,7 +32,17 @@ namespace Ribbons.Context
         {
             Canvas.BeginDraw();
             Canvas.PushTransform(transform);
+            sprite.Position = Vector2.Zero;
             sprite.Anchor = Anchor.TopLeft;
+            Canvas.DrawSprite(sprite);
+            sprite.Position = Vector2.UnitX;
+            sprite.Anchor = Anchor.TopRight;
+            Canvas.DrawSprite(sprite);
+            sprite.Position = Vector2.One;
+            sprite.Anchor = Anchor.BottomRight;
+            Canvas.DrawSprite(sprite);
+            sprite.Position = Vector2.UnitY;
+            sprite.Anchor = Anchor.BottomLeft;
             Canvas.DrawSprite(sprite);
             Canvas.PopTransform();
             Canvas.EndDraw();

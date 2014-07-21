@@ -49,6 +49,7 @@ namespace Ribbons.Context
         public void Update(GameTime gameTime)
         {
             input.Update();
+            canvas.DisplayDebugInformation = input.Debug.JustPressed;
             if (currentContext.Exit || currentContext.NextContext != null)
             {
                 targetOverlayAlpha = 1;
