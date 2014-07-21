@@ -63,6 +63,10 @@ namespace Ribbons.Graphics
         /// <param name="transform">The coordinate transform to push.</param>
         public void PushTransform(CoordinateTransform transform)
         {
+#if DEBUG
+            if (displayDebugInformation)
+                Console.WriteLine("DEBUG: Pushed {0}", transform);
+#endif
             transformationStack.Add(transform);
         }
 
@@ -72,7 +76,13 @@ namespace Ribbons.Graphics
         public void PopTransform()
         {
             if (transformationStack.Count > 0)
+            {
+#if DEBUG
+                if (displayDebugInformation)
+                    Console.WriteLine("DEBUG: Popped {0}", transformationStack[transformationStack.Count - 1]);
+#endif
                 transformationStack.RemoveAt(transformationStack.Count - 1);
+            }
         }
 
         /// <summary>
@@ -114,7 +124,6 @@ namespace Ribbons.Graphics
                              0);
 #if DEBUG
             if (displayDebugInformation)
-            {
                 Console.WriteLine("DEBUG: Drawing Texture\n" +
                                   "            Texture: {0} ({1}x{2})\n" +
                                   "           Position: {3}\n" +
@@ -133,7 +142,6 @@ namespace Ribbons.Graphics
                                   origin,
                                   sprite.Anchor,
                                   scale);
-            }
 #endif
         }
 
@@ -157,14 +165,12 @@ namespace Ribbons.Graphics
             spriteBatch.Draw(square1x1, p1, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
 #if DEBUG
             if (displayDebugInformation)
-            {
                 Console.WriteLine("DEBUG: Drawing Line\n" +
                                   "         StartPoint: {0}\n" +
                                   "           EndPoint: {1}\n" +
                                   "              Color: {2}\n" +
                                   "          Thickness: {3}",
                                   p1, p2, color, thickness);
-            }
 #endif
         }
 
@@ -192,7 +198,6 @@ namespace Ribbons.Graphics
                                    0);
 #if DEBUG
             if (displayDebugInformation)
-            {
                 Console.WriteLine("DEBUG: Drawing String\n" +
                                   "               Text: {0} ({1}x{2})\n" +
                                   "           Position: {3}\n" +
@@ -209,7 +214,6 @@ namespace Ribbons.Graphics
                                   origin,
                                   textSprite.Anchor,
                                   scale);
-            }
 #endif
         }
 
