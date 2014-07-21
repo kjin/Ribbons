@@ -8,7 +8,5 @@ namespace Ribbons.Engine
     public struct UserData
     {
         public Object thing;
-        public bool unbounded = false;
-        public bool bounded = false;
     }
 }

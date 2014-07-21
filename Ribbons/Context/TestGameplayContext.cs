@@ -19,11 +19,16 @@ namespace Ribbons.Context
         World world;
         Player player;
         List<Ground> ground;
+        GameplayTransform transform;
+        ForceController forceController;
 
         public override void Initialize()
         {
             world = new World(new Vector2(0, WorldConstants.GRAVITY));
             player = new Player(world, new Vector2(5, 5));
+            forceController = new ForceController(InputController, player);
+
+            transform = new GameplayTransform(new Vector2(5, 5));
 
             ground = new List<Ground>();
             List<Vector2> rectangle = new List<Vector2>();
@@ -43,6 +48,8 @@ namespace Ribbons.Context
 
         public override void Update(GameTime gameTime)
         {
+            transform.Update();
+            forceController.Update();
             world.Step((float) (gameTime.ElapsedGameTime).Milliseconds);
         }
 
