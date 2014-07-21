@@ -28,7 +28,7 @@ namespace Ribbons.Context
             player = new Player(world, new Vector2(5, 5));
             forceController = new ForceController(InputController, player);
 
-            transform = new GameplayTransform(new Vector2(5, 5));
+            transform = new GameplayTransform(new Vector2(5, 5), 1f);
 
             ground = new List<Ground>();
             List<Vector2> rectangle = new List<Vector2>();
@@ -55,6 +55,7 @@ namespace Ribbons.Context
 
         public override void Draw(GameTime gameTime)
         {
+            Canvas.PushTransform(transform);
             Canvas.BeginDraw();
             player.Draw(Canvas);
             foreach (Ground g in ground)
@@ -62,6 +63,7 @@ namespace Ribbons.Context
                 g.Draw(Canvas);
             }
             Canvas.EndDraw();
+            Canvas.PopTransform();
         }
     }
 }

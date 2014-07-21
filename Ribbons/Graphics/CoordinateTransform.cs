@@ -81,8 +81,8 @@ namespace Ribbons.Graphics
         public GameplayTransform(Vector2 center, float zoom = 1f, float convergenceRate = 1f)
         {
             this.viewportDimensions = GraphicsConstants.VIEWPORT_DIMENSIONS;
-            this.center = center;
-            this.zoom = zoom;
+            this.center = targetCenter = center;
+            this.zoom = targetZoom = zoom;
             this.convergenceRate = convergenceRate;
             this.pixelsPerUnit = GraphicsConstants.PIXELS_PER_UNIT;
         }
