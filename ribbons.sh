@@ -3,12 +3,12 @@
 # Set up paths based on username
 if [ "$USER" = jink2 ]
 then
-    ribbons_source_path='/cygdrive/c/Users/jink2/Documents/ribbons/Ribbons'
+    ribbons_source_path='/cygdrive/c/Users/jink2/Documents/Ribbons/Ribbons'
     ribbons_dropbox_path='/cygdrive/c/Users/jink2/Dropbox/Ribbons'
 fi
 if [ "$USER" = Danny ]
 then
-    ribbons_source_path='/cygdrive/c/Users/Danny/Documents/ribbons/Ribbons'
+    ribbons_source_path='/cygdrive/c/Users/Danny/Documents/Ribbons/Ribbons'
     ribbons_dropbox_path='/cygdrive/c/Users/Danny/Dropbox/Ribbons'
 fi
 ribbons_repo_path='https://github.com/kjin/Ribbons.git'
