@@ -13,6 +13,7 @@ then
 fi
 ribbons_repo_path='https://github.com/kjin/Ribbons.git'
 ribbons_rel_content_path='RibbonsContent/RibbonsContentContent'
+ribbons_rel_bin_path='Ribbons/bin/WindowsGL'
 ribbons_assets[1]='Textures'
 ribbons_assets[2]='SFX'
 ribbons_assets[3]='XACT'
@@ -21,10 +22,12 @@ ribbons()
 {
     if [ -z "$1" ]
     then
-        echo 'ribbons go      Goes to the Ribbons source directory'
-        echo 'ribbons clone   Clones Ribbons in the current directory'
-        echo 'ribbons pull    Pulls changes to Ribbons source from Git and Dropbox'
-        echo 'ribbons push    Pushes changes to Ribbons source to Git and Dropbox'
+        echo 'ribbons clone          Clones Ribbons in the current directory'
+        echo 'ribbons debug (arg)    Runs lkg Ribbons debug build'
+        echo 'ribbons go             Goes to the Ribbons source directory'
+        echo 'ribbons pull           Pulls changes to Ribbons source from Git and Dropbox'
+        echo 'ribbons push           Pushes changes to Ribbons source to Git and Dropbox'
+        echo 'ribbons release (arg)  Runs lkg Ribbons release build'
     fi
     if [ "$1" = 'go' ]
     then
@@ -33,6 +36,14 @@ ribbons()
     if [ "$1" = 'clone' ]
     then
         git clone $ribbons_repo_path
+    fi
+    if [ "$1" = 'debug' ]
+    then
+        $ribbons_source_path/$ribbons_rel_bin_path/Debug/Ribbons.exe $2
+    fi
+    if [ "$1" = 'release' ]
+    then
+        $ribbons_source_path/$ribbons_rel_bin_path/Release/Ribbons.exe $2
     fi
     if [ "$1" = 'pull' ]
     then
