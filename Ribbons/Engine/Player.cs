@@ -14,41 +14,65 @@ using Ribbons.Graphics;
 
 namespace Ribbons.Engine
 {
-
-    #region UserData
-    public struct PlayerUserData
-    {
-        public Player player;
-    }
-    #endregion
-
-    public class Player
+    public class Player : UnboundedObject
     {
         #region Fields
-        // keep track for drawing
-        List<Vector2> boundingBox;
 
-        // body!
-        Body body;
+        // keep track for debug drawing
+        private List<Vector2> boundingBox;
+
+        // keep track of input
+        private float moveLeft = 0;
+        private float moveRight = 0;
+        private bool startJump = false;
+        private bool continueJump = false;
+
+        // grounded state
+        private List<Fixture> landedFixtures = new List<Fixture>();
+
+        // keep track of jump
+        // (1 through INITJUMP is starting to jump, 
+        // INITJUMP to JUMPCOOLDOWN is unable to jump)
+        private int jumpCountdown = 0;
+        private float jumpVelocity = 0;
+
+        // fields from UnboundedObject:
+        //Body body;
+
+        #endregion
+
+        #region Properties
 
         #endregion
 
         #region Constructor
+
         public Player(World world, Vector2 position)
         {
-            PlayerUserData userData;
-            userData.player = this;
+            // create the user data
+            UserData userData = new UserData();
+            userData.thing = this;
 
+            // create the body
             body = BodyFactory.CreateBody(world, position, 0, userData);
-            Fixture fixture = body.CreateFixture(CreateShape(), userData);
-
-            fixture.Friction = PlayerConstants.FRICTION;
-
             body.IsStatic = false;
             body.FixedRotation = true;
+
+            // create the body fixture
+            Fixture bodyFixture = body.CreateFixture(CreateBodyShape(), userData);
+            bodyFixture.Friction = PlayerConstants.FRICTION;
+
+            // create the landing fixture
+            Fixture landingFixture = body.CreateFixture(CreateLandingShape(), userData);
+            landingFixture.IsSensor = true;
+            landingFixture.OnCollision += OnLandingCollision;
+            landingFixture.OnSeparation += OnLandingSeparation;
         }
 
-        private Shape CreateShape()
+        /// <summary>
+        /// Returns the shape of player's body
+        /// </summary>
+        private Shape CreateBodyShape()
         {
             List<Vector2> vertices = new List<Vector2>();
 
@@ -65,30 +89,183 @@ namespace Ribbons.Engine
 
             return new PolygonShape(new Vertices(vertices), PlayerConstants.DENSITY);
         }
+
+        /// <summary>
+        /// Returns the shape of landing detector
+        /// </summary>
+        private Shape CreateLandingShape()
+        {
+            List<Vector2> vertices = new List<Vector2>();
+
+            float x = PlayerConstants.WIDTH / 2;
+            float y = 0.5f;
+
+            vertices.Add(new Vector2(-x, y));
+            vertices.Add(new Vector2(-x, -y + PlayerConstants.SLANT));
+            vertices.Add(new Vector2(0, -y));
+            vertices.Add(new Vector2(x, -y + PlayerConstants.SLANT));
+            vertices.Add(new Vector2(x, y));
+
+            boundingBox = vertices;
+
+            return new PolygonShape(new Vertices(vertices), PlayerConstants.DENSITY);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private bool IsGrounded()
+        {
+            bool ret = false;
+            foreach (Fixture f in landedFixtures)
+            {
+                if (!f.IsSensor)
+                {
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
         #endregion
 
         #region ForceController Methods
         public void MoveLeft(float speed)
         {
-            body.ApplyForce(new Vector2(-speed, 0));
+            moveLeft = speed;
         }
 
         public void MoveRight(float speed)
         {
-            body.ApplyForce(new Vector2(speed, 0));
+            moveRight = speed;
         }
 
         public void Jump()
         {
+            startJump = true;
+        }
 
+        public void ContinueJump()
+        {
+            continueJump = true;
         }
         #endregion
 
-        #region Update
-        public void Update()
-        {
+        #region OnLandingCollision
 
+        bool OnLandingCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            if (!landedFixtures.Contains(fixtureB))
+            {
+                landedFixtures.Add(fixtureB);
+            }
+
+            return true;
         }
+
+        void OnLandingSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+            if (landedFixtures.Contains(fixtureB))
+            {
+                landedFixtures.Remove(fixtureB);
+            }
+        }
+
+        #endregion
+
+        #region Update
+
+        public override void Update()
+        {
+            // update jumpVelocity variable based on jump inputs
+            UpdateJump();
+
+            // update change in velocity
+            UpdateVelocity();
+
+            // update physics body velocity
+            base.Update();
+
+            // reset values for next update
+            UpdateEnd();
+        }
+
+        /// <summary>
+        /// Checks jumpCountdown and input and edits jumpVelocity accordingly
+        /// </summary>
+        private void UpdateJump()
+        {
+            jumpVelocity = 0;
+
+            // we can jump again
+            if (jumpCountdown > PlayerConstants.JUMPCOOLDOWN)
+            {
+                jumpCountdown = 0;
+            }
+
+            // if we've initiated a jump
+            if (jumpCountdown >= 1)
+            {
+                jumpCountdown++;
+            }
+
+            // a jump has been initiated
+            if (startJump && IsGrounded() && (jumpCountdown == 0))
+            {
+                jumpCountdown = 1;
+            }
+
+            // jump startup is finished
+            if (jumpCountdown == PlayerConstants.INITJUMP && IsGrounded())
+            {
+                if (continueJump)
+                {
+                    jumpVelocity = PlayerConstants.JUMPFORCE;
+                }
+                else
+                {
+                    jumpVelocity = PlayerConstants.SMALLJUMPFORCE;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Uses input to update physics body velocity.
+        /// </summary>
+        private void UpdateVelocity()
+        {
+            Vector2 velocityChange = new Vector2(0, 0);
+            Vector2 currentVelocity = RelativeVelocity;
+
+            velocityChange += new Vector2(-PlayerConstants.GROUNDSPEED * moveLeft, 0);
+            velocityChange += new Vector2(PlayerConstants.GROUNDSPEED * moveRight, 0);
+            velocityChange += new Vector2(0, jumpVelocity);
+
+            if (IsGrounded())
+            {
+                velocityChange += -currentVelocity * PlayerConstants.GROUNDDRAG;
+            }
+            else
+            {
+                velocityChange.X += -currentVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
+                velocityChange.Y += -currentVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
+            }
+
+            ChangeSpeed(velocityChange);
+        }
+
+        /// <summary>
+        /// Resets appropriate variables to be ready for the next time step.
+        /// </summary>
+        private void UpdateEnd()
+        {
+            moveLeft = 0;
+            moveRight = 0;
+            jumpVelocity = 0;
+        }
+
         #endregion
 
         #region Draw

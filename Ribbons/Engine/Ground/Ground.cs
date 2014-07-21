@@ -18,13 +18,6 @@ namespace Ribbons.Engine.Ground
 
     public enum GroundType { Ground, Miasma };
 
-    #region UserData
-    public struct GroundUserData
-    {
-        public GroundType groundType;
-    }
-    #endregion
-
     public class Ground
     {
         #region Fields
@@ -35,13 +28,14 @@ namespace Ribbons.Engine.Ground
         #endregion
 
         #region Constructor
+
         public Ground(World world, PolygonF polygon, GroundType type)
         {
             this.shape = polygon;
             this.type = type;
 
-            GroundUserData userData;
-            userData.groundType = type;
+            UserData userData = new UserData();
+            userData.thing = this;
 
             Vertices vertices = new Vertices(polygon.points);
 

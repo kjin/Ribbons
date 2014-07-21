@@ -32,6 +32,9 @@ namespace Ribbons
                 initialContext = "Ribbons.Context." + args[0] + "Context";
             else
                 initialContext = "Ribbons.Context.SandboxContext";
+
+            //set the frame rate
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, (int)(1000f/RibbonsGameConstants.FRAME_RATE));
         }
 
         /// <summary>
