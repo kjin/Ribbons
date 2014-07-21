@@ -269,14 +269,16 @@ namespace Ribbons.Engine
         #endregion
 
         #region Draw
+
         public void Draw(Canvas canvas)
         {
             for(int i = 0; i+1 < boundingBox.Count; i++)
             {
-                canvas.DrawLine(Color.OrangeRed, 5, boundingBox[i], boundingBox[i+1]);
+                canvas.DrawLine(Color.OrangeRed, 5, boundingBox[i] + body.Position, boundingBox[i+1] + body.Position);
             }
-            canvas.DrawLine(Color.OrangeRed, 5, boundingBox[boundingBox.Count-1], boundingBox[0]);
+            canvas.DrawLine(Color.OrangeRed, 5, boundingBox[boundingBox.Count-1] + body.Position, boundingBox[0] + body.Position);
         }
+
         #endregion
     }
 }
