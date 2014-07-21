@@ -20,6 +20,7 @@ cameraDown.key = K
 pause.key = Enter
 screencap.key = OemTilde
 debug1.key = V
+zoom.key = Tab
 
 # Gamepad Controls
 menuLeft.leftjoystick = (-1, 0)

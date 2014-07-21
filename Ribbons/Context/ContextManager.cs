@@ -49,6 +49,7 @@ namespace Ribbons.Context
         public void Update(GameTime gameTime)
         {
             input.Update();
+            canvas.DisplayDebugInformation = input.Debug.JustPressed;
             if (currentContext.Exit || currentContext.NextContext != null)
             {
                 targetOverlayAlpha = 1;
@@ -74,6 +75,11 @@ namespace Ribbons.Context
         public void Draw(GameTime gameTime)
         {
             currentContext.Draw(gameTime);
+            bool leftoverTransforms = canvas.PopAllTransforms();
+#if DEBUG
+            if (leftoverTransforms)
+                Console.WriteLine("WARNING: Not all transforms were popped off the canvas stack.");
+#endif
         }
     }
 }

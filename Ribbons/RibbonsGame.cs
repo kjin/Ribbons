@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using Ribbons.Context;
+using Ribbons.Graphics;
 #endregion
 
 namespace Ribbons
@@ -33,8 +34,12 @@ namespace Ribbons
             else
                 initialContext = "Ribbons.Context.SandboxContext";
 
+
             //set the frame rate
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, (int)(1000f/RibbonsGameConstants.FRAME_RATE));
+
+            graphics.PreferredBackBufferWidth = GraphicsConstants.VIEWPORT_WIDTH;
+            graphics.PreferredBackBufferHeight = GraphicsConstants.VIEWPORT_HEIGHT;
         }
 
         /// <summary>

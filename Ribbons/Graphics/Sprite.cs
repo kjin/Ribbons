@@ -78,6 +78,7 @@ namespace Ribbons.Graphics
             Anchor = Anchor.Center;
             TicksPerFrame = 1;
             Looped = true;
+            Color = Color.White;
         }
         /// <summary>
         /// Updates the sprite.
