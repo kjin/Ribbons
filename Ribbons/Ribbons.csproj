@@ -47,6 +47,10 @@
     <Compile Include="Context\SandboxContext.cs" />
     <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
+    <Compile Include="Engine\Ribbon.cs" />
+    <Compile Include="Engine\UnboundedObject.cs" />
+    <Compile Include="Engine\UserData.cs" />
+    <Compile Include="GameConstants.cs" />
     <Compile Include="Graphics\Anchor.cs" />
     <Compile Include="Graphics\CoordinateTransform.cs" />
     <Compile Include="Graphics\GraphicsConstants.cs" />
