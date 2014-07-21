@@ -10,12 +10,17 @@ namespace Ribbons.Context
     public class SandboxContext : GameContext
     {
         Sprite sprite;
+        TextSprite text;
         GameplayTransform transform;
+        UITransform ui;
 
         public override void Initialize()
         {
             sprite = new Sprite(AssetManager.GetAnimatedTexture("PlayerSprites/playeridle"));
+            text = new TextSprite(AssetManager.GetFont("default"), "Wet Floor Confidential - Do Not Distribute");
+            text.Color = Color.Black;
             transform = new GameplayTransform(Vector2.Zero, 1, 0.5f);
+            ui = new UITransform();
         }
 
         public override void Dispose()
@@ -48,6 +53,20 @@ namespace Ribbons.Context
             Canvas.BeginDraw();
             Canvas.PushTransform(transform);
             Canvas.DrawSprite(sprite);
+            Canvas.PopTransform();
+            Canvas.PushTransform(ui);
+            text.Position = Vector2.Zero;
+            text.Anchor = Anchor.TopLeft;
+            Canvas.DrawTextSprite(text);
+            text.Position = Vector2.UnitX;
+            text.Anchor = Anchor.TopRight;
+            Canvas.DrawTextSprite(text);
+            text.Position = Vector2.One;
+            text.Anchor = Anchor.BottomRight;
+            Canvas.DrawTextSprite(text);
+            text.Position = Vector2.UnitY;
+            text.Anchor = Anchor.BottomLeft;
+            Canvas.DrawTextSprite(text);
             Canvas.PopTransform();
             Canvas.EndDraw();
         }

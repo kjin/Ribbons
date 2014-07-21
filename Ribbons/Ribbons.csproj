@@ -43,6 +43,7 @@
     <Compile Include="Content\TextReader.cs" />
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\GameContext.cs" />
+    <Compile Include="Context\Option.cs" />
     <Compile Include="Context\SandboxContext.cs" />
     <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Graphics\GraphicsConstants.cs" />
     <Compile Include="Graphics\AnimatedTexture.cs" />
     <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Graphics\TextSprite.cs" />
     <Compile Include="Input\InputControl.cs" />
     <Compile Include="Input\InputController.cs" />
     <Compile Include="RibbonsGame.cs" />

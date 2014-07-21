@@ -26,7 +26,7 @@ namespace Ribbons.Context
         {
             assets = new AssetManager();
             assets.LoadContent(content, graphicsDevice);
-            canvas = new Canvas(graphicsDevice, spriteBatch);
+            canvas = new Canvas(assets, graphicsDevice, spriteBatch);
             input = new InputController(assets);
         }
 

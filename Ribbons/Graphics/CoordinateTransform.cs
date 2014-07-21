@@ -7,17 +7,24 @@ using Microsoft.Xna.Framework;
 namespace Ribbons.Graphics
 {
     /// <summary>
-    /// An interface for a coordinate transform.
+    /// An abstract class for a coordinate transform.
     /// When applied to a texture, the Transform function
     /// will be applied to each image's position, rotation, and
     /// scale, mapping the respective coordinate system
     /// associated with the transform to the viewport coordinates.
     /// </summary>
-    public interface CoordinateTransform
+    public abstract class CoordinateTransform
     {
-        void Transform(ref Vector2 position,
-                       ref float rotation,
-                       ref Vector2 scale);
+        public virtual void TransformPosition(ref Vector2 position) { }
+        public virtual void TransformRotation(ref float rotation) { }
+        public virtual void TransformScale(ref Vector2 scale) { }
+
+        public void Transform(ref Vector2 position, ref float rotation, ref Vector2 scale)
+        {
+            TransformPosition(ref position);
+            TransformRotation(ref rotation);
+            TransformScale(ref scale);
+        }
     }
 
     /// <summary>
@@ -40,12 +47,13 @@ namespace Ribbons.Graphics
             scale = dimensions.Y / REFERENCE_DIMENSIONS.Y;
         }
 
-        public void Transform(ref Vector2 position,
-                              ref float rotation,
-                              ref Vector2 scale)
+        public override void TransformPosition(ref Vector2 position)
         {
             position *= dimensions;
-            //we don't transform rotation.
+        }
+
+        public override void TransformScale(ref Vector2 scale)
+        {
             scale *= this.scale;
         }
     }
@@ -85,13 +93,16 @@ namespace Ribbons.Graphics
             zoom = MathHelper.Lerp(zoom, targetZoom, convergenceRate);
         }
 
-        public void Transform(ref Vector2 position, ref float rotation, ref Vector2 scale)
+        public override void TransformPosition(ref Vector2 position)
         {
             position -= center;
             position *= zoom * pixelsPerUnit;
             position.Y *= -1;
             position += viewportDimensions / 2f;
-            //we don't transform rotation. yet.
+        }
+
+        public override void TransformScale(ref Vector2 scale)
+        {
             scale *= zoom;
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Ribbons.Content;
 
 namespace Ribbons.Graphics
 {
@@ -15,15 +16,18 @@ namespace Ribbons.Graphics
         SpriteBatch spriteBatch;
         //1x1 texture used in drawing lines and boxes
         Texture2D square1x1;
+        //Default font used for mostly debug text
+        SpriteFont spriteFont;
         List<CoordinateTransform> transformationStack;
         bool displayDebugInformation;
 
         /// <summary>
         /// Constructs a new Canvas object.
         /// </summary>
+        /// <param name="assetManager">The AssetManager object used to import assets.</param>
         /// <param name="graphicsDevice">The GraphicsDevice object associated with the game.</param>
         /// <param name="spriteBatch">The SpriteBatch object used for drawing.</param>
-        public Canvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public Canvas(AssetManager assetManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
             this.spriteBatch = spriteBatch;
 
@@ -33,6 +37,7 @@ namespace Ribbons.Graphics
             data[0] = Color.White;
             square1x1.SetData<Color>(data);
             transformationStack = new List<CoordinateTransform>(4);
+            spriteFont = assetManager.GetFont("default");
             displayDebugInformation = false;
         }
 
@@ -110,7 +115,7 @@ namespace Ribbons.Graphics
 #if DEBUG
             if (displayDebugInformation)
             {
-                Console.WriteLine("spriteBatch.Draw called:\n" +
+                Console.WriteLine("DEBUG: Drawing Texture\n" +
                                   "            Texture: {0} ({1}x{2})\n" +
                                   "           Position: {3}\n" +
                                   "    SourceRectangle: {4}\n" +
@@ -141,10 +146,71 @@ namespace Ribbons.Graphics
         /// <param name="p2">The ending point of the line.</param>
         public void DrawLine(Color color, float thickness, Vector2 p1, Vector2 p2)
         {
+            for (int i = 0; i < transformationStack.Count; i++)
+            {
+                transformationStack[i].TransformPosition(ref p1);
+                transformationStack[i].TransformPosition(ref p2);
+            }
             Vector2 diff = p2 - p1;
             float angle = (float)Math.Atan2(diff.Y, diff.X);
             float length = diff.Length();
             spriteBatch.Draw(square1x1, p1, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
+#if DEBUG
+            if (displayDebugInformation)
+            {
+                Console.WriteLine("DEBUG: Drawing Line\n" +
+                                  "         StartPoint: {0}\n" +
+                                  "           EndPoint: {1}\n" +
+                                  "              Color: {2}\n" +
+                                  "          Thickness: {3}",
+                                  p1, p2, color, thickness);
+            }
+#endif
+        }
+
+        public void DrawString(string text, Vector2 position, Color color)
+        {
+            spriteBatch.DrawString(spriteFont, text, position, color);
+        }
+
+        public void DrawTextSprite(TextSprite textSprite)
+        {
+            Vector2 position = textSprite.Position;
+            float rotation = textSprite.Rotation;
+            Vector2 scale = textSprite.Scale;
+            for (int i = 0; i < transformationStack.Count; i++)
+                transformationStack[i].Transform(ref position, ref rotation, ref scale);
+            Vector2 origin = AnchorHelper.ComputeAnchorOrigin(textSprite.Anchor, textSprite.Dimensions);
+            spriteBatch.DrawString(textSprite.SpriteFont,
+                                   textSprite.Text,
+                                   position,
+                                   textSprite.Color,
+                                   rotation,
+                                   origin,
+                                   scale,
+                                   SpriteEffects.None,
+                                   0);
+#if DEBUG
+            if (displayDebugInformation)
+            {
+                Console.WriteLine("DEBUG: Drawing String\n" +
+                                  "               Text: {0} ({1}x{2})\n" +
+                                  "           Position: {3}\n" +
+                                  "              Color: {4}\n" +
+                                  "           Rotation: {5}\n" +
+                                  "             Origin: {6} ({7})\n" +
+                                  "              Scale: {8}",
+                                  textSprite.Text,
+                                  textSprite.Dimensions.X,
+                                  textSprite.Dimensions.Y,
+                                  position,
+                                  textSprite.Color,
+                                  rotation,
+                                  origin,
+                                  textSprite.Anchor,
+                                  scale);
+            }
+#endif
         }
 
         /// <summary>
@@ -152,7 +218,18 @@ namespace Ribbons.Graphics
         /// </summary>
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public bool DisplayDebugInformation { get { return displayDebugInformation; } set { displayDebugInformation = value; } }
+        public bool DisplayDebugInformation
+        {
+            get { return displayDebugInformation; }
+            set
+            {
+#if DEBUG
+                if (displayDebugInformation != value)
+                    Console.WriteLine("--------------------------------");
+#endif
+                displayDebugInformation = value;
+            }
+        }
     }
 
     /*public class Camera
