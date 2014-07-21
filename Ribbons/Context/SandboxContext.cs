@@ -10,12 +10,12 @@ namespace Ribbons.Context
     public class SandboxContext : GameContext
     {
         Sprite sprite;
-        UITransform transform;
+        GameplayTransform transform;
 
         public override void Initialize()
         {
-            sprite = new Sprite(AssetManager.GetAnimatedTexture("wetfloorsign"));
-            transform = new UITransform(GraphicsConstants.VIEWPORT_DIMENSIONS);
+            sprite = new Sprite(AssetManager.GetAnimatedTexture("PlayerSprites/playeridle"));
+            transform = new GameplayTransform(Vector2.Zero, 1, 0.5f);
         }
 
         public override void Dispose()
@@ -25,24 +25,28 @@ namespace Ribbons.Context
 
         public override void Update(GameTime gameTime)
         {
-            
+            sprite.Update();
+            Vector2 cameraDelta = Vector2.Zero;
+            if (InputController.CameraLeft.JustPressed)
+                cameraDelta.X--;
+            if (InputController.CameraRight.JustPressed)
+                cameraDelta.X++;
+            if (InputController.CameraDown.JustPressed)
+                cameraDelta.Y--;
+            if (InputController.CameraUp.JustPressed)
+                cameraDelta.Y++;
+            if (InputController.Zoom.Pressed)
+                transform.Zoom = 2;
+            else
+                transform.Zoom = 1;
+            transform.Center += cameraDelta;
+            transform.Update();
         }
 
         public override void Draw(GameTime gameTime)
         {
             Canvas.BeginDraw();
             Canvas.PushTransform(transform);
-            sprite.Position = Vector2.Zero;
-            sprite.Anchor = Anchor.TopLeft;
-            Canvas.DrawSprite(sprite);
-            sprite.Position = Vector2.UnitX;
-            sprite.Anchor = Anchor.TopRight;
-            Canvas.DrawSprite(sprite);
-            sprite.Position = Vector2.One;
-            sprite.Anchor = Anchor.BottomRight;
-            Canvas.DrawSprite(sprite);
-            sprite.Position = Vector2.UnitY;
-            sprite.Anchor = Anchor.BottomLeft;
             Canvas.DrawSprite(sprite);
             Canvas.PopTransform();
             Canvas.EndDraw();

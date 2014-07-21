@@ -1,1 +1,2 @@
 wetfloorsign.scale = 0.5
+PlayerSprites/playeridle.columns = 7

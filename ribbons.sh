@@ -22,12 +22,12 @@ ribbons()
 {
     if [ -z "$1" ]
     then
-        echo 'ribbons clone          Clones Ribbons in the current directory'
-        echo 'ribbons debug (arg)    Runs lkg Ribbons debug build'
-        echo 'ribbons go             Goes to the Ribbons source directory'
-        echo 'ribbons pull           Pulls changes to Ribbons source from Git and Dropbox'
-        echo 'ribbons push           Pushes changes to Ribbons source to Git and Dropbox'
-        echo 'ribbons release (arg)  Runs lkg Ribbons release build'
+        echo 'ribbons clone    Clones Ribbons in the current directory'
+        echo 'ribbons debug    Goes to the Ribbons debug build folder'
+        echo 'ribbons go       Goes to the Ribbons source directory'
+        echo 'ribbons pull     Pulls changes to Ribbons source from Git and Dropbox'
+        echo 'ribbons push     Pushes changes to Ribbons source to Git and Dropbox'
+        echo 'ribbons release  Goes to the Ribbons release build folder'
     fi
     if [ "$1" = 'go' ]
     then
@@ -39,11 +39,11 @@ ribbons()
     fi
     if [ "$1" = 'debug' ]
     then
-        $ribbons_source_path/$ribbons_rel_bin_path/Debug/Ribbons.exe $2
+        cd $ribbons_source_path/$ribbons_rel_bin_path/Debug
     fi
     if [ "$1" = 'release' ]
     then
-        $ribbons_source_path/$ribbons_rel_bin_path/Release/Ribbons.exe $2
+        cd $ribbons_source_path/$ribbons_rel_bin_path/Release
     fi
     if [ "$1" = 'pull' ]
     then

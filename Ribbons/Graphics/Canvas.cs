@@ -66,7 +66,22 @@ namespace Ribbons.Graphics
         /// </summary>
         public void PopTransform()
         {
-            transformationStack.RemoveAt(transformationStack.Count - 1);
+            if (transformationStack.Count > 0)
+                transformationStack.RemoveAt(transformationStack.Count - 1);
+        }
+
+        /// <summary>
+        /// Pops all transforms. This should only be called by the context manager.
+        /// </summary>
+        /// <returns>Whether any transforms were cleared.</returns>
+        public bool PopAllTransforms()
+        {
+            if (transformationStack.Count > 0)
+            {
+                transformationStack.Clear();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

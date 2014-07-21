@@ -59,7 +59,10 @@ namespace Ribbons.Graphics
     {
         Vector2 viewportDimensions;
         Vector2 center;
+        Vector2 targetCenter;
         float zoom;
+        float targetZoom;
+        float convergenceRate;
         float pixelsPerUnit;
 
         /// <summary>
@@ -67,12 +70,19 @@ namespace Ribbons.Graphics
         /// </summary>
         /// <param name="center">The center position of the camera.</param>
         /// <param name="zoom">How much the camera is zoomed.</param>
-        public GameplayTransform(Vector2 center, float zoom)
+        public GameplayTransform(Vector2 center, float zoom = 1f, float convergenceRate = 1f)
         {
             this.viewportDimensions = GraphicsConstants.VIEWPORT_DIMENSIONS;
             this.center = center;
             this.zoom = zoom;
+            this.convergenceRate = convergenceRate;
             this.pixelsPerUnit = GraphicsConstants.PIXELS_PER_UNIT;
+        }
+
+        public void Update()
+        {
+            center = Vector2.Lerp(center, targetCenter, convergenceRate);
+            zoom = MathHelper.Lerp(zoom, targetZoom, convergenceRate);
         }
 
         public void Transform(ref Vector2 position, ref float rotation, ref Vector2 scale)
@@ -80,6 +90,7 @@ namespace Ribbons.Graphics
             position -= center;
             position *= zoom * pixelsPerUnit;
             position.Y *= -1;
+            position += viewportDimensions / 2f;
             //we don't transform rotation. yet.
             scale *= zoom;
         }
@@ -87,10 +98,10 @@ namespace Ribbons.Graphics
         /// <summary>
         /// Gets or sets the center position of the camera.
         /// </summary>
-        public Vector2 Center { get { return center; } set { center = value; } }
+        public Vector2 Center { get { return targetCenter; } set { targetCenter = value; } }
         /// <summary>
         /// Gets or sets the camera's zoom.
         /// </summary>
-        public float Zoom { get { return zoom; } set { zoom = value; } }
+        public float Zoom { get { return targetZoom; } set { targetZoom = value; } }
     }
 }
