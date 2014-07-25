@@ -5,6 +5,7 @@ using System.Text;
 using Ribbons.Content;
 using Ribbons.Graphics;
 using Ribbons.Input;
+using Ribbons.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,7 @@ namespace Ribbons.Context
         Canvas canvas;
         InputController input;
         AssetManager assets;
+        StorageManager storage;
 
         public ContextManager(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
@@ -28,6 +30,7 @@ namespace Ribbons.Context
             assets.LoadContent(content, graphicsDevice);
             canvas = new Canvas(assets, graphicsDevice, spriteBatch);
             input = new InputController(assets);
+            storage = new StorageManager();
         }
 
         public void SetInitialContext(GameContext context)
@@ -43,6 +46,7 @@ namespace Ribbons.Context
             gameContext.AssetManager = assets;
             gameContext.Canvas = canvas;
             gameContext.InputController = input;
+            gameContext.StorageManager = storage;
             gameContext.Initialize();
         }
 
@@ -78,7 +82,8 @@ namespace Ribbons.Context
             bool leftoverTransforms = canvas.PopAllTransforms();
 #if DEBUG
             if (leftoverTransforms)
-                Console.WriteLine("WARNING: Not all transforms were popped off the canvas stack.");
+                Console.WriteLine("WARNING: Not all transforms were popped off the canvas stack.\n" +
+                                  "    If you see this message, please check the Draw() function in the currently running context.");
 #endif
         }
     }

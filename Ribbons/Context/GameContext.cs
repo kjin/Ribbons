@@ -5,6 +5,7 @@ using System.Text;
 using Ribbons.Content;
 using Ribbons.Graphics;
 using Ribbons.Input;
+using Ribbons.Storage;
 using Microsoft.Xna.Framework;
 
 namespace Ribbons.Context
@@ -16,6 +17,7 @@ namespace Ribbons.Context
         public Canvas Canvas { get; set; }
         public InputController InputController { get; set; }
         public AssetManager AssetManager { get; set; }
+        public StorageManager StorageManager { get; set; }
 
         protected GameContext()
         {

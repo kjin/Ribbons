@@ -22,12 +22,13 @@ ribbons()
 {
     if [ -z "$1" ]
     then
-        echo 'ribbons clone    Clones Ribbons in the current directory'
-        echo 'ribbons debug    Goes to the Ribbons debug build folder'
-        echo 'ribbons go       Goes to the Ribbons source directory'
-        echo 'ribbons pull     Pulls changes to Ribbons source from Git and Dropbox'
-        echo 'ribbons push     Pushes changes to Ribbons source to Git and Dropbox'
-        echo 'ribbons release  Goes to the Ribbons release build folder'
+        echo 'ribbons clone             Clones Ribbons in the current directory'
+        echo 'ribbons debug             Goes to the Ribbons debug build folder'
+        echo 'ribbons commit [message]  Fast add current folder and commit with message (use with caution)'
+        echo 'ribbons go                Goes to the Ribbons source directory'
+        echo 'ribbons pull              Pulls changes to Ribbons source from Git and Dropbox'
+        echo 'ribbons push              Pushes changes to Ribbons source to Git and Dropbox'
+        echo 'ribbons release           Goes to the Ribbons release build folder'
     fi
     if [ "$1" = 'go' ]
     then
@@ -36,6 +37,17 @@ ribbons()
     if [ "$1" = 'clone' ]
     then
         git clone $ribbons_repo_path
+    fi
+    if [ "$1" = 'commit' ]
+    then
+        if [ -z "$2" ]
+        then
+            echo 'No message provided - nothing was added or committed.'
+        else
+            git reset HEAD .
+            git add .
+            git commit -m "$2"
+        fi
     fi
     if [ "$1" = 'debug' ]
     then
