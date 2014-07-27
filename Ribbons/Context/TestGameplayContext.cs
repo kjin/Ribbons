@@ -50,7 +50,8 @@ namespace Ribbons.Context
         {
             transform.Update();
             forceController.Update();
-            world.Step((float) (gameTime.ElapsedGameTime).Milliseconds);
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+            player.Update();
         }
 
         public override void Draw(GameTime gameTime)

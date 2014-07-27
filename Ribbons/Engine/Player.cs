@@ -186,7 +186,7 @@ namespace Ribbons.Engine
             UpdateVelocity();
 
             // update physics body velocity
-            base.Update();
+            //base.Update();
 
             // reset values for next update
             UpdateEnd();
@@ -236,24 +236,26 @@ namespace Ribbons.Engine
         /// </summary>
         private void UpdateVelocity()
         {
-            Vector2 velocityChange = new Vector2(0, 0);
-            Vector2 currentVelocity = RelativeVelocity;
+            Vector2 linearVelocity = body.LinearVelocity;
 
-            velocityChange += new Vector2(-PlayerConstants.GROUNDSPEED * moveLeft, 0);
-            velocityChange += new Vector2(PlayerConstants.GROUNDSPEED * moveRight, 0);
-            velocityChange += new Vector2(0, jumpVelocity);
+            linearVelocity += new Vector2(0, jumpVelocity);
 
             if (IsGrounded())
             {
-                velocityChange += -currentVelocity * PlayerConstants.GROUNDDRAG;
+                linearVelocity += new Vector2(-PlayerConstants.GROUNDSPEED * moveLeft, 0);
+                linearVelocity += new Vector2(PlayerConstants.GROUNDSPEED * moveRight, 0);
+                linearVelocity.X -= linearVelocity.X * PlayerConstants.GROUNDDRAG;
             }
             else
             {
-                velocityChange.X += -currentVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
-                velocityChange.Y += -currentVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
+                linearVelocity += new Vector2(-PlayerConstants.AIRSPEED * moveLeft, 0);
+                linearVelocity += new Vector2(PlayerConstants.AIRSPEED * moveRight, 0);
+                linearVelocity.X -= linearVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
+                linearVelocity.Y -= linearVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
             }
 
-            ChangeSpeed(velocityChange);
+            //ChangeSpeed(velocityChange);
+            body.LinearVelocity = linearVelocity;
         }
 
         /// <summary>
@@ -263,6 +265,9 @@ namespace Ribbons.Engine
         {
             moveLeft = 0;
             moveRight = 0;
+            startJump = false;
+            continueJump = false;
+
             jumpVelocity = 0;
         }
 
