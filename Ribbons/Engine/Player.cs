@@ -186,7 +186,7 @@ namespace Ribbons.Engine
             UpdateVelocity();
 
             // update physics body velocity
-            //base.Update();
+            base.Update();
 
             // reset values for next update
             UpdateEnd();
@@ -236,26 +236,25 @@ namespace Ribbons.Engine
         /// </summary>
         private void UpdateVelocity()
         {
-            Vector2 linearVelocity = body.LinearVelocity;
+            Vector2 velocityChange = new Vector2(0,0);
 
-            linearVelocity += new Vector2(0, jumpVelocity);
+            velocityChange += new Vector2(0, jumpVelocity);
 
             if (IsGrounded())
             {
-                linearVelocity += new Vector2(-PlayerConstants.GROUNDSPEED * moveLeft, 0);
-                linearVelocity += new Vector2(PlayerConstants.GROUNDSPEED * moveRight, 0);
-                linearVelocity.X -= linearVelocity.X * PlayerConstants.GROUNDDRAG;
+                velocityChange += new Vector2(-PlayerConstants.GROUNDSPEED * moveLeft, 0);
+                velocityChange += new Vector2(PlayerConstants.GROUNDSPEED * moveRight, 0);
+                velocityChange.X -= RelativeVelocity.X * PlayerConstants.GROUNDDRAG;
             }
             else
             {
-                linearVelocity += new Vector2(-PlayerConstants.AIRSPEED * moveLeft, 0);
-                linearVelocity += new Vector2(PlayerConstants.AIRSPEED * moveRight, 0);
-                linearVelocity.X -= linearVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
-                linearVelocity.Y -= linearVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
+                velocityChange += new Vector2(-PlayerConstants.AIRSPEED * moveLeft, 0);
+                velocityChange += new Vector2(PlayerConstants.AIRSPEED * moveRight, 0);
+                velocityChange.X -= RelativeVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
+                velocityChange.Y -= RelativeVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
             }
 
-            //ChangeSpeed(velocityChange);
-            body.LinearVelocity = linearVelocity;
+            ChangeSpeed(velocityChange);
         }
 
         /// <summary>
