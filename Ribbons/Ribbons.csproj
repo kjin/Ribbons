@@ -42,7 +42,7 @@
     <Compile Include="Content\TextDictionary.cs" />
     <Compile Include="Content\TextReader.cs" />
     <Compile Include="Context\ContextManager.cs" />
-    <Compile Include="Context\GameContext.cs" />
+    <Compile Include="Context\ContextBase.cs" />
     <Compile Include="Context\GameplayContext.cs" />
     <Compile Include="Context\Option.cs" />
     <Compile Include="Context\SandboxContext.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="Engine\UserData.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="Graphics\Anchor.cs" />
+    <Compile Include="Graphics\AnimationCurve.cs" />
     <Compile Include="Graphics\CoordinateTransform.cs" />
     <Compile Include="Graphics\GraphicsConstants.cs" />
     <Compile Include="Graphics\AnimatedTexture.cs" />

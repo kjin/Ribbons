@@ -63,7 +63,7 @@ namespace Ribbons
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             contextManager = new ContextManager(Content, GraphicsDevice, spriteBatch);
-            contextManager.SetInitialContext((GameContext)Activator.CreateInstance(Type.GetType(initialContext)));
+            contextManager.SetInitialContext((ContextBase)Activator.CreateInstance(Type.GetType(initialContext)));
 
             // TODO: use this.Content to load your game content here
         }

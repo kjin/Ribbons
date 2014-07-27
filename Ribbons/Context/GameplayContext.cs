@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Ribbons.Context
 {
-    public class GameplayContext : GameContext
+    public class GameplayContext : ContextBase
     {
 
 

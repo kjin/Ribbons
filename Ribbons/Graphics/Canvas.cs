@@ -65,7 +65,7 @@ namespace Ribbons.Graphics
         {
 #if DEBUG
             if (displayDebugInformation)
-                Console.WriteLine("DEBUG: Pushed {0}", transform);
+                Console.WriteLine("CANVAS DEBUG: Pushed {0}", transform);
 #endif
             transformationStack.Add(transform);
         }
@@ -79,7 +79,7 @@ namespace Ribbons.Graphics
             {
 #if DEBUG
                 if (displayDebugInformation)
-                    Console.WriteLine("DEBUG: Popped {0}", transformationStack[transformationStack.Count - 1]);
+                    Console.WriteLine("CANVAS DEBUG: Popped {0}", transformationStack[transformationStack.Count - 1]);
 #endif
                 transformationStack.RemoveAt(transformationStack.Count - 1);
             }
@@ -106,17 +106,17 @@ namespace Ribbons.Graphics
         /// <param name="sprite">The sprite to draw.</param>
         public void DrawSprite(Sprite sprite)
         {
-            Vector2 position = sprite.Position;
-            float rotation = sprite.Rotation;
-            Vector2 scale = sprite.Scale * sprite.Texture.Scale;
-            for (int i = 0; i < transformationStack.Count; i++)
+            Vector2 position = sprite.AnimatedPosition;
+            float rotation = sprite.AnimatedRotation;
+            Vector2 scale = sprite.AnimatedScale * sprite.Texture.Scale;
+            for (int i = transformationStack.Count - 1; i >= 0; i--)
                 transformationStack[i].Transform(ref position, ref rotation, ref scale);
             Rectangle sourceRectangle = sprite.Texture.GetFrame(sprite.Frame);
             Vector2 origin = AnchorHelper.ComputeAnchorOrigin(sprite.Anchor, sprite.Texture.Dimensions * sprite.Texture.Scale);
             spriteBatch.Draw(sprite.Texture.Texture,
                              position,
                              sourceRectangle,
-                             sprite.Color,
+                             sprite.AnimatedColor,
                              rotation,
                              origin,
                              scale,
@@ -124,7 +124,7 @@ namespace Ribbons.Graphics
                              0);
 #if DEBUG
             if (displayDebugInformation)
-                Console.WriteLine("DEBUG: Drawing Texture\n" +
+                Console.WriteLine("CANVAS DEBUG: Drawing Texture\n" +
                                   "            Texture: {0} ({1}x{2})\n" +
                                   "           Position: {3}\n" +
                                   "    SourceRectangle: {4}\n" +
@@ -137,7 +137,7 @@ namespace Ribbons.Graphics
                                   sprite.Texture.Texture.Height,
                                   position,
                                   sourceRectangle,
-                                  sprite.Color,
+                                  sprite.AnimatedColor,
                                   rotation,
                                   origin,
                                   sprite.Anchor,
@@ -165,7 +165,7 @@ namespace Ribbons.Graphics
             spriteBatch.Draw(square1x1, p1, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
 #if DEBUG
             if (displayDebugInformation)
-                Console.WriteLine("DEBUG: Drawing Line\n" +
+                Console.WriteLine("CANVAS DEBUG: Drawing Line\n" +
                                   "         StartPoint: {0}\n" +
                                   "           EndPoint: {1}\n" +
                                   "              Color: {2}\n" +
@@ -198,7 +198,7 @@ namespace Ribbons.Graphics
                                    0);
 #if DEBUG
             if (displayDebugInformation)
-                Console.WriteLine("DEBUG: Drawing String\n" +
+                Console.WriteLine("CANVAS DEBUG: Drawing String\n" +
                                   "               Text: {0} ({1}x{2})\n" +
                                   "           Position: {3}\n" +
                                   "              Color: {4}\n" +

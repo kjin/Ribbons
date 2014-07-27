@@ -14,7 +14,7 @@ namespace Ribbons.Context
 {
     public class ContextManager
     {
-        GameContext currentContext;
+        ContextBase currentContext;
         float currentOverlayAlpha;
         float targetOverlayAlpha;
         bool exitGame;
@@ -33,13 +33,13 @@ namespace Ribbons.Context
             storage = new StorageManager();
         }
 
-        public void SetInitialContext(GameContext context)
+        public void SetInitialContext(ContextBase context)
         {
             InitializeContextComponents(context);
             currentContext = context;
         }
 
-        void InitializeContextComponents(GameContext gameContext)
+        void InitializeContextComponents(ContextBase gameContext)
         {
             if (gameContext == null)
                 return;

@@ -7,7 +7,7 @@ using Ribbons.Graphics;
 
 namespace Ribbons.Context
 {
-    public class SandboxContext : GameContext
+    public class SandboxContext : ContextBase
     {
         Sprite sprite;
         TextSprite text;
@@ -17,6 +17,7 @@ namespace Ribbons.Context
         public override void Initialize()
         {
             sprite = new Sprite(AssetManager.GetAnimatedTexture("PlayerSprites/playeridle"));
+            sprite.PushAnimationCurve(new SineAnimationCurve(SpriteComponents.PositionX, Sinusoid.BuildSine(1, 60)));
             text = new TextSprite(AssetManager.GetFont("default"), "Wet Floor Confidential - Do Not Distribute");
             text.Color = Color.Black;
             transform = new GameplayTransform(Vector2.Zero, 1, 0.5f);

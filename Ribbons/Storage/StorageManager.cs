@@ -14,7 +14,7 @@ namespace Ribbons.Storage
         // State variable
         public PlayerData CurrentPlayerData;
 
-        public StorageManager() { throw new NotImplementedException(); }
+        public StorageManager() { }
 
         /// <summary>
         /// Loads player data.

@@ -14,7 +14,7 @@ using Ribbons.Graphics;
 
 namespace Ribbons.Context
 {
-    public class TestGameplayContext : GameContext
+    public class TestGameplayContext : ContextBase
     {
         World world;
         Player player;
