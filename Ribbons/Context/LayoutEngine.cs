@@ -59,9 +59,8 @@ namespace Ribbons.Context
             layoutTree = new LayoutTree();
             layoutTree.Root = dummy.Children.First.Value;
 #if DEBUG
-            if (dummy.Children.Count > 0)
+            if (dummy.Children.Count > 1)
                 Console.WriteLine("LayoutEngine WARNING: {0} top-level nodes found... the last {1} will be ignored.", dummy.Children.Count, dummy.Children.Count - 1);
-            
 #endif
         }
 
@@ -92,7 +91,7 @@ namespace Ribbons.Context
             if (bracketLevel != 0)
             {
 #if DEBUG
-                Console.WriteLine("LayoutEngine WARNING: At least one mismatched bracket found.");
+                Console.WriteLine("LayoutEngine WARNING: At least one mismatched bracket found in parent key {0}.", node.Key);
 #endif
                 return;
             }
@@ -114,22 +113,22 @@ namespace Ribbons.Context
 #endif
                     return;
                 }
-                string value = cSourceString.Substring(equals, leftBracket - equals);
+                string value = cSourceString.Substring(equals + 1, leftBracket - equals - 1);
                 LayoutTreeNode currentNode = new LayoutTreeNode(key, value);
                 node.Children.AddLast(currentNode);
-                Parse(sourceString.Substring(leftBracket, rightBracket - leftBracket), currentNode);
+                Parse(cSourceString.Substring(leftBracket + 1, rightBracket - leftBracket - 1), currentNode);
             }
         }
     }
 
-    class LayoutTree
+    public class LayoutTree
     {
         public LayoutTreeNode Root;
         public String RepresentativeString { get { if (!stringMade) MakeString(); return representativeString; } }
         String representativeString;
         bool stringMade = false;
 
-        public void MakeString()
+        private void MakeString()
         {
             StringBuilder sb = new StringBuilder();
             Root.ToString(sb, "");
@@ -138,7 +137,7 @@ namespace Ribbons.Context
         }
     }
 
-    class LayoutTreeNode
+    public class LayoutTreeNode
     {
         public string Key;
         public string Value;
@@ -156,7 +155,7 @@ namespace Ribbons.Context
             sb.AppendFormat("{0}{1} | {2}\r\n", prependedSpaces, Key, Value);
             string childPrependedSpaces = prependedSpaces + "    ";
             for (LinkedListNode<LayoutTreeNode> childNode = Children.First;
-                 childNode.Next != null;
+                 childNode != null;
                  childNode = childNode.Next)
             {
                 childNode.Value.ToString(sb, childPrependedSpaces);

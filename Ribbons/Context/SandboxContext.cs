@@ -22,6 +22,7 @@ namespace Ribbons.Context
             text.Color = Color.Black;
             transform = new GameplayTransform(Vector2.Zero, 1, 0.5f);
             ui = new UITransform();
+            LayoutEngine le = new LayoutEngine(AssetManager.GetText("mockup"));
         }
 
         public override void Dispose()
