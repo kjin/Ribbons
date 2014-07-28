@@ -6,11 +6,9 @@ using Ribbons.Content;
 
 namespace Ribbons.Context
 {
-    public class LayoutEngine
+    public static class LayoutEngine
     {
-        LayoutTree layoutTree;
-
-        public LayoutEngine(Text source)
+        public static LayoutTree BuildLayout(Text source)
         {
             int length = source.Length;
             StringBuilder processed = new StringBuilder();
@@ -56,15 +54,16 @@ namespace Ribbons.Context
             // Dummy node because the root has not yet been born
             LayoutTreeNode dummy = new LayoutTreeNode("dummy", "dummy");
             Parse(processed.ToString(), dummy);
-            layoutTree = new LayoutTree();
+            LayoutTree layoutTree = new LayoutTree();
             layoutTree.Root = dummy.Children.First.Value;
 #if DEBUG
             if (dummy.Children.Count > 1)
                 Console.WriteLine("LayoutEngine WARNING: {0} top-level nodes found... the last {1} will be ignored.", dummy.Children.Count, dummy.Children.Count - 1);
 #endif
+            return layoutTree;
         }
 
-        static private void Parse(String sourceString, LayoutTreeNode node)
+        static void Parse(String sourceString, LayoutTreeNode node)
         {
             List<String> cSourceStrings = new List<string>();
             // Make the child source strings
@@ -117,48 +116,6 @@ namespace Ribbons.Context
                 LayoutTreeNode currentNode = new LayoutTreeNode(key, value);
                 node.Children.AddLast(currentNode);
                 Parse(cSourceString.Substring(leftBracket + 1, rightBracket - leftBracket - 1), currentNode);
-            }
-        }
-    }
-
-    public class LayoutTree
-    {
-        public LayoutTreeNode Root;
-        public String RepresentativeString { get { if (!stringMade) MakeString(); return representativeString; } }
-        String representativeString;
-        bool stringMade = false;
-
-        private void MakeString()
-        {
-            StringBuilder sb = new StringBuilder();
-            Root.ToString(sb, "");
-            representativeString = sb.ToString();
-            stringMade = true;
-        }
-    }
-
-    public class LayoutTreeNode
-    {
-        public string Key;
-        public string Value;
-        public LinkedList<LayoutTreeNode> Children;
-
-        public LayoutTreeNode(string key, string value)
-        {
-            Key = key;
-            Value = value;
-            Children = new LinkedList<LayoutTreeNode>();
-        }
-
-        public void ToString(StringBuilder sb, string prependedSpaces)
-        {
-            sb.AppendFormat("{0}{1} | {2}\r\n", prependedSpaces, Key, Value);
-            string childPrependedSpaces = prependedSpaces + "    ";
-            for (LinkedListNode<LayoutTreeNode> childNode = Children.First;
-                 childNode != null;
-                 childNode = childNode.Next)
-            {
-                childNode.Value.ToString(sb, childPrependedSpaces);
             }
         }
     }

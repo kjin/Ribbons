@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Ribbons.Utils;
 
 namespace Ribbons.Content
 {
@@ -167,14 +168,7 @@ namespace Ribbons.Content
                 cachedString = obj;
                 cachedDict = dict[obj];
             }
-            string s = cachedDict[property];
-            s = s.Replace('(', ' ');
-            s = s.Replace(')', ' ');
-            s = s.Trim();
-            string[] components = s.Split(',');
-            if (components.Length < 2)
-                throw new ArgumentException();
-            return new Vector2(Convert.ToSingle(components[0]), Convert.ToSingle(components[1]));
+            return ExtendedConvert.ToVector2(cachedDict[property]);
         }
 
         /// <summary>
@@ -190,14 +184,7 @@ namespace Ribbons.Content
                 cachedString = obj;
                 cachedDict = dict[obj];
             }
-            string s = cachedDict[property];
-            s = s.Replace('(', ' ');
-            s = s.Replace(')', ' ');
-            s = s.Trim();
-            string[] components = s.Split(',');
-            if (components.Length < 3)
-                throw new ArgumentException();
-            return new Vector3(Convert.ToSingle(components[0]), Convert.ToSingle(components[1]), Convert.ToSingle(components[2]));
+            return ExtendedConvert.ToVector3(cachedDict[property]);
         }
 
         /// <summary>
@@ -213,14 +200,7 @@ namespace Ribbons.Content
                 cachedString = obj;
                 cachedDict = dict[obj];
             }
-            string s = cachedDict[property];
-            s = s.Replace('(', ' ');
-            s = s.Replace(')', ' ');
-            s = s.Trim();
-            string[] components = s.Split(',');
-            if (components.Length < 4)
-                throw new ArgumentException();
-            return new Vector4(Convert.ToSingle(components[0]), Convert.ToSingle(components[1]), Convert.ToSingle(components[2]), Convert.ToSingle(components[3]));
+            return ExtendedConvert.ToVector4(cachedDict[property]);
         }
 
         /// <summary>
@@ -231,8 +211,12 @@ namespace Ribbons.Content
         /// <returns>A Color value.</returns>
         public Color LookupColor(string obj, string property)
         {
-            try { return new Color(LookupVector4(obj, property)); }
-            catch { return new Color(LookupVector3(obj, property)); }
+            if (cachedString == null || !cachedString.Equals(obj))
+            {
+                cachedString = obj;
+                cachedDict = dict[obj];
+            }
+            return ExtendedConvert.ToColor(cachedDict[property]);
         }
 
         /// <summary>

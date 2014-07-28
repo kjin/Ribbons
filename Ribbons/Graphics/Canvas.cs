@@ -13,6 +13,7 @@ namespace Ribbons.Graphics
     /// </summary>
     public class Canvas
     {
+        GraphicsDevice graphicsDevice;
         SpriteBatch spriteBatch;
         //1x1 texture used in drawing lines and boxes
         Texture2D square1x1;
@@ -29,8 +30,8 @@ namespace Ribbons.Graphics
         /// <param name="spriteBatch">The SpriteBatch object used for drawing.</param>
         public Canvas(AssetManager assetManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
+            this.graphicsDevice = graphicsDevice;
             this.spriteBatch = spriteBatch;
-
             // initialize our tiny square. This square is used for drawing primitives.
             square1x1 = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] data = new Color[1];
@@ -39,6 +40,15 @@ namespace Ribbons.Graphics
             transformationStack = new List<CoordinateTransform>(4);
             spriteFont = assetManager.GetFont("default");
             displayDebugInformation = false;
+        }
+
+        /// <summary>
+        /// Fills the viewport with a given color.
+        /// </summary>
+        /// <param name="color">The fill color.</param>
+        public void Clear(Color color)
+        {
+            graphicsDevice.Clear(color);
         }
 
         /// <summary>

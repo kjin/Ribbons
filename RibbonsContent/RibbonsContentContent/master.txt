@@ -1,0 +1,39 @@
+Ribbons = ContextManager
+{
+    Contexts[TitleContext] = ContextBase
+    {
+        BGColor = (0, 0, 0);
+        ContextElements[UITransform] = CoordinateTransformContextElement
+        {
+            Transform = UITransform;
+        }
+        ContextElements[TitleCard] = SpriteContextElement
+        {
+            Texture = "TitleScreen/TitleCard";
+            Position = (0.5, 0.4);
+            Anchor = Center;
+            Scale = (0.25, 0.25);
+            # Rotation defaults to zero.
+            Animation[0] = PeriodicCurve
+            {
+                Component = PositionY;
+                Amplitude = 0.01;
+                Period = 120;
+                Shape = "Sinusoid";
+            }
+        }
+        ContextElements[TitleCard] = TextContextElement
+        {
+            Font = "default";
+            Text = "THE EXPERIENCE";
+            Position = (0.5, 0.6);
+            Anchor = Center;
+        }
+    }
+    Contexts[GameContext] = ContextBase
+    {
+        BGColor = (0, 0, 0);
+        ContextElements[Engine] = GameplayContextElement;
+    }
+    InitialContext = GameContext;
+}

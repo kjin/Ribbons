@@ -12,10 +12,11 @@ using Ribbons.Engine;
 using Ribbons.Utils;
 using Ribbons.Graphics;
 using Ribbons.Content.Level;
+using Ribbons.Content;
 
 namespace Ribbons.Context
 {
-    public class TestGameplayContext : ContextBase
+    public class TestGameplayContext : ContextElement
     {
         World world;
         Player player;
@@ -47,9 +48,9 @@ namespace Ribbons.Context
             List<Vector2> path = new List<Vector2>();
             path.Add(new Vector2(-5, 3));
             path.Add(new Vector2(17, 3));
-            ribbonStorage.path = path;
-            ribbonStorage.start = 5;
-            ribbonStorage.end = 10;
+            ribbonStorage.Path = path;
+            ribbonStorage.Start = 5;
+            ribbonStorage.End = 10;
 
             ribbon = RibbonFactory.Get(world, ribbonStorage);
         }
@@ -71,15 +72,15 @@ namespace Ribbons.Context
         public override void Draw(GameTime gameTime)
         {
             Canvas.PushTransform(transform);
-            Canvas.BeginDraw();
             player.Draw(Canvas);
             foreach (Ground g in ground)
             {
                 g.Draw(Canvas);
             }
             ribbon.Draw(Canvas);
-            Canvas.EndDraw();
             Canvas.PopTransform();
         }
+
+        protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode) { return false; }
     }
 }
