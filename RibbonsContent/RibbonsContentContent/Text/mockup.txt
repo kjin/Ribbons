@@ -1,0 +1,15 @@
+# Ribbons
+Game = ContextManager
+{
+    Contexts[TitleContext] = ContextBase
+    {
+        BGColor = 0x000000;
+        ContextElements[TitleCard] = SpriteContextElement
+        {
+            Texture = "RibbonsTitleCard";
+            Position = (0.5, 0.5);
+            Anchor = Center;
+            # Rotation defaults to zero, and scale defaults to 1.
+        }
+    }
+}
