@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Content\AssetManager.cs" />
+    <Compile Include="Content\Level\RibbonStorage.cs" />
     <Compile Include="Content\TextDictionary.cs" />
     <Compile Include="Content\TextReader.cs" />
     <Compile Include="Context\ContextManager.cs" />
@@ -96,7 +97,9 @@
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Engine\RibbonTypes\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Farseer Physics Engine 3.5\Farseer Physics MonoGame.csproj">
       <Project>{0aad36e3-51a5-4a07-ab60-5c8a66bd38b7}</Project>

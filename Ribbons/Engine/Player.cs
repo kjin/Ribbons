@@ -19,7 +19,7 @@ namespace Ribbons.Engine
         #region Fields
 
         // keep track for debug drawing
-        private List<Vector2> boundingBox;
+        private List<Vector2> boundingBox = new List<Vector2>();
 
         // keep track of input
         private float moveLeft = 0;
@@ -36,12 +36,20 @@ namespace Ribbons.Engine
         private int jumpCountdown = 0;
         private float jumpVelocity = 0;
 
+        // The ribbon currently under control
+        private Ribbon ribbons;
+
         // fields from UnboundedObject:
         //Body body;
 
         #endregion
 
         #region Properties
+
+        public Ribbon Ribbon
+        {
+            get { return Ribbon; }
+        }
 
         #endregion
 
@@ -132,6 +140,7 @@ namespace Ribbons.Engine
         #endregion
 
         #region ForceController Methods
+
         public void MoveLeft(float speed)
         {
             moveLeft = speed;
@@ -151,6 +160,12 @@ namespace Ribbons.Engine
         {
             continueJump = true;
         }
+
+        public void RibbonFlip()
+        {
+            Ribbon.Flip(body.Position);
+        }
+
         #endregion
 
         #region OnLandingCollision
@@ -250,8 +265,8 @@ namespace Ribbons.Engine
             {
                 velocityChange += new Vector2(-PlayerConstants.AIRSPEED * moveLeft, 0);
                 velocityChange += new Vector2(PlayerConstants.AIRSPEED * moveRight, 0);
-                velocityChange.X -= RelativeVelocity.X * PlayerConstants.HORIZONTAL_AIRDRAG;
-                velocityChange.Y -= RelativeVelocity.Y * PlayerConstants.VERTICAL_AIRDRAG;
+                velocityChange.X -= RelativeVelocity.X * PlayerConstants.HORIZONTALAIRDRAG;
+                velocityChange.Y -= RelativeVelocity.Y * PlayerConstants.VERTICALAIRDRAG;
             }
 
             ChangeSpeed(velocityChange);

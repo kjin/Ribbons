@@ -46,6 +46,18 @@ namespace Ribbons.Engine
             }
 
             // TODO: ribbon input
+            if (inputController.RibbonLeft.Pressed)
+            {
+                player.Ribbon.MoveLeft(inputController.RibbonLeft.Value);
+            }
+            if (inputController.RibbonRight.Pressed)
+            {
+                player.Ribbon.MoveRight(inputController.RibbonRight.Value);
+            }
+            if (inputController.RibbonFlip.Pressed)
+            {
+                player.RibbonFlip();
+            }
         }
     }
 }

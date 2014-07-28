@@ -45,7 +45,28 @@ namespace Ribbons.Engine
 
         // for desired air properties
         public const float AIRSPEED = 0.15f;
-        public const float HORIZONTAL_AIRDRAG = 0.03f;
-        public const float VERTICAL_AIRDRAG = 0.0f;
+        public const float HORIZONTALAIRDRAG = 0.03f;
+        public const float VERTICALAIRDRAG = 0.0f;
+    }
+
+    /// <summary>
+    /// Contains constants determining how the ribbon moves.
+    /// </summary>
+    public class RibbonConstants
+    {
+        // ribbon speed
+        public const float SPEED = 0.05f;
+        public const float DYNAMICDRAG = 0.05f;
+
+        // ribbon discrete movement
+        public const float STATICDRAG = 1.0f;
+        public const float DISCRETETHRESHOLD = 0.05f; //how close the ribbon has to be to be "discrete"
+        public const float DISCRETEPULL = 0.005f; //how much the ribbon is pulled to discrete areas
+        public const float DISCRETEOFFSET = 1.5f; //how far the ribbon must have been moved to be pulled back
+        public const float STILLTHRESHOLD = 0.0001f; //how still the ribbon must be to go into "still" mode
+
+        // ribbon fixture constants
+        public const int FIXTUREOVERLAY = 4; //the number of overlapping fixtures used to describe the ribbon
+
     }
 }
