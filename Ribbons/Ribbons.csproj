@@ -39,9 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Content\AssetManager.cs" />
+    <Compile Include="Content\Level\LevelStorage.cs" />
     <Compile Include="Content\Level\RibbonStorage.cs" />
     <Compile Include="Content\TextDictionary.cs" />
     <Compile Include="Content\TextReader.cs" />
+    <Compile Include="Context\AnimationCurveElement.cs" />
     <Compile Include="Context\ContextElement.cs" />
     <Compile Include="Context\ContextManager.cs" />
     <Compile Include="Context\ContextBase.cs" />

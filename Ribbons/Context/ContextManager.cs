@@ -32,7 +32,7 @@ namespace Ribbons.Context
             canvas = new Canvas(assets, graphicsDevice, spriteBatch);
             input = new InputController(assets);
             storage = new StorageManager();
-            LayoutTree layoutTree = LayoutEngine.BuildLayout(assets.GetText("mockup"));
+            LayoutTree layoutTree = LayoutEngine.BuildLayout(content.Load<Text>("master"));
             Integrate(assets, layoutTree.Root);
         }
 

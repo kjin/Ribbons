@@ -35,5 +35,5 @@ Ribbons = ContextManager
         BGColor = (0, 0, 0);
         ContextElements[Engine] = GameplayContextElement;
     }
-    InitialContext = TitleContext;
+    InitialContext = GameContext;
 }

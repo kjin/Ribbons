@@ -72,7 +72,7 @@ namespace Ribbons.Input
         public InputController(AssetManager assets)
         {
             controllerConnected = GamePad.GetState(PlayerIndex.One).IsConnected;
-            TextDictionary dict = new TextDictionary(assets.GetText("controls"));
+            TextDictionary dict = assets.GetDictionary("controls");
             controls = new InputControl[controlNames.Length];
             for (int i = 0; i < controls.Length; i++)
             {

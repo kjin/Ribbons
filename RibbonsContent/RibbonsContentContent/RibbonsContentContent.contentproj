@@ -48,7 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Text\controls.txt">
+    <Compile Include="Config\controls.txt">
       <Name>controls</Name>
       <Importer>TextImporter</Importer>
       <Processor>TextProcessor</Processor>
@@ -61,7 +61,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Text\graphics.txt">
+    <Compile Include="Config\graphics.txt">
       <Name>graphics</Name>
       <Importer>TextImporter</Importer>
       <Processor>TextProcessor</Processor>
@@ -89,8 +89,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Text\mockup.txt">
-      <Name>mockup</Name>
+    <Compile Include="master.txt">
+      <Name>master</Name>
       <Importer>TextImporter</Importer>
       <Processor>TextProcessor</Processor>
     </Compile>
@@ -100,6 +100,16 @@
       <Name>TitleCard</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Text\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Levels\Level1.txt">
+      <Name>Level1</Name>
+      <Importer>TextImporter</Importer>
+      <Processor>TextProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

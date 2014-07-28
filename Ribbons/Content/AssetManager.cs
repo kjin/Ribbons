@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using Ribbons.Graphics;
+using Ribbons.Context;
 
 namespace Ribbons.Content
 {
@@ -60,6 +61,7 @@ namespace Ribbons.Content
         AssetCollection<Effect> effects;
         AssetCollection<Text> text;
         //Post-processed assets
+        AssetCollection<Text> levels;
         AssetCollection<AnimatedTexture> animatedTextures;
         AssetCollection<TextDictionary> dicts;
 
@@ -75,7 +77,8 @@ namespace Ribbons.Content
             fonts = new AssetCollection<SpriteFont>("Fonts");
             text = new AssetCollection<Text>("Text");
             animatedTextures = new AssetCollection<AnimatedTexture>("Textures");
-            dicts = new AssetCollection<TextDictionary>("Text");
+            dicts = new AssetCollection<TextDictionary>("Config");
+            levels = new AssetCollection<Text>("Levels");
         }
 
         /// <summary>
@@ -99,13 +102,14 @@ namespace Ribbons.Content
             LoadNormalContent<Effect>(content, effects);
             LoadNormalContent<SpriteFont>(content, fonts);
             LoadNormalContent<Text>(content, text);
-            List<string> textAssetNames = text.GetAssetNames();
-            //TODO: Change this awful way of importing things
-            foreach (string t in textAssetNames)
-            {
-                try { dicts.AddAsset(t, new TextDictionary(text.GetAsset(t))); }
-                catch { }
-            }
+            // Temporary collection
+            AssetCollection<Text> dictAssets = new AssetCollection<Text>(dicts.Directory);
+            LoadNormalContent<Text>(content, dictAssets);
+            List<string> dictAssetNames = dictAssets.GetAssetNames();
+            foreach (string t in dictAssetNames)
+                dicts.AddAsset(t, new TextDictionary(dictAssets.GetAsset(t)));
+            // Levels: first loaded as text only
+            LoadNormalContent<Text>(content, levels);
             List<string> textureAssetNames = textures.GetAssetNames();
             foreach (string t in textureAssetNames)
             {
@@ -189,5 +193,11 @@ namespace Ribbons.Content
         /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
         /// <returns>The asset associated with the asset name provided.</returns>
         public AnimatedTexture GetAnimatedTexture(string assetName) { return animatedTextures.GetAsset(assetName); }
+        /// <summary>
+        /// Gets a level based on its asset name.
+        /// </summary>
+        /// <param name="assetName">The name of the asset. This typically excludes the .* extension as well as the directory.</param>
+        /// <returns>The asset associated with the asset name provided.</returns>
+        public Level.LevelStorage GetLevel(string assetName) { return new Level.LevelStorage(levels.GetAsset(assetName)); }
     }
 }
