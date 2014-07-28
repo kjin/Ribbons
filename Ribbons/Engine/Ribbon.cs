@@ -366,7 +366,7 @@ namespace Ribbons.Engine
     {
         public static Ribbon Get(World world, RibbonStorage ribbonStorage)
         {
-            return new UnloopedRibbon(world, ribbonStorage.path, ribbonStorage.start, ribbonStorage.end);
+            return new UnloopedRibbon(world, ribbonStorage.Path, ribbonStorage.Start, ribbonStorage.End);
         }
     }
 
