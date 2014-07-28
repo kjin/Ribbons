@@ -22,27 +22,31 @@ namespace Ribbons.Context
         public AssetManager AssetManager { get; set; }
         public StorageManager StorageManager { get; set; }
 
-        public ContextBase()
+        public void Initialize()
         {
             NextContext = -1;
+            for (int i = 0; i < elements.Count; i++)
+                elements[i].Initialize();
         }
 
-        public virtual void Initialize() { NextContext = -1; }
-
-        public virtual void Dispose() { }
-
-        public virtual void Update(GameTime gameTime)
+        public void Dispose()
         {
             for (int i = 0; i < elements.Count; i++)
-                elements[i].Update(InputController);
+                elements[i].Dispose();
         }
 
-        public virtual void Draw(GameTime gameTime)
+        public void Update(GameTime gameTime)
+        {
+            for (int i = 0; i < elements.Count; i++)
+                elements[i].Update(gameTime);
+        }
+
+        public void Draw(GameTime gameTime)
         {
             Canvas.Clear(BackgroundColor);
             Canvas.BeginDraw();
             for (int i = 0; i < elements.Count; i++)
-                elements[i].Draw(Canvas);
+                elements[i].Draw(gameTime);
             Canvas.EndDraw();
             Canvas.PopAllTransforms();
         }
@@ -70,9 +74,13 @@ namespace Ribbons.Context
                         case "CoordinateTransformContextElement":
                             contextElement = new CoordinateTransformContextElement();
                             break;
+                        case "GameplayContextElement":
+                            contextElement = new TestGameplayContext();
+                            break;
                     }
                     if (contextElement != null)
                     {
+                        contextElement.SetComponents(this);
                         contextElement.Integrate(assets, childNode);
                         elements.Add(contextElement);
                         return true;

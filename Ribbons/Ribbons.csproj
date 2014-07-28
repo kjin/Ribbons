@@ -49,7 +49,6 @@
     <Compile Include="Context\LayoutTree.cs" />
     <Compile Include="Context\LayoutTreeNode.cs" />
     <Compile Include="Context\Option.cs" />
-    <Compile Include="Context\SandboxContext.cs" />
     <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
     <Compile Include="Engine\Ribbon.cs" />

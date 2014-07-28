@@ -16,4 +16,10 @@ Ribbons = ContextManager
             # Rotation defaults to zero.
         }
     }
+    Contexts[GameContext] = ContextBase
+    {
+        BGColor = (0, 0, 0);
+        ContextElements[Engine] = GameplayContextElement;
+    }
+    InitialContext = GameContext;
 }

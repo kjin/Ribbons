@@ -50,7 +50,9 @@ namespace Ribbons.Context
                         exitGame = true;
                     else
                     {
+                        int oldContext = currentContext;
                         currentContext = contexts[currentContext].NextContext;
+                        contexts[oldContext].Dispose();
                         contexts[currentContext].Initialize();
                     }
                 }
@@ -82,6 +84,17 @@ namespace Ribbons.Context
         {
             switch (childNode.Key)
             {
+                case "InitialContext":
+                    for (int i = 0; i < contexts.Count; i++)
+                    {
+                        if (contexts[i].LayoutName == childNode.Value)
+                        {
+                            currentContext = i;
+                            return true;
+                        }
+                    }
+                    Console.WriteLine("LayoutEngine WARNING: Couldn't find a context named {0}. Make sure the context has been created first.", childNode.Value);
+                    return true;
                 case "Contexts":
                     ContextBase gameContext = new ContextBase();
                     gameContext.AssetManager = assets;
@@ -93,6 +106,11 @@ namespace Ribbons.Context
                     return true;
             }
             return false;
+        }
+
+        protected override void IntegrationPostprocess(LayoutTreeNode node)
+        {
+            contexts[currentContext].Initialize();
         }
         #endregion
     }

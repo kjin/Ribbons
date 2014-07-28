@@ -6,25 +6,43 @@ using Ribbons.Graphics;
 using Ribbons.Content;
 using Ribbons.Utils;
 using Ribbons.Input;
+using Ribbons.Storage;
 using Microsoft.Xna.Framework;
 
 namespace Ribbons.Context
 {
     public abstract class ContextElement : LayoutBase
     {
-        public virtual void Update(InputController inputController) { }
+        protected Canvas Canvas { get; private set; }
+        protected InputController InputController { get; private set; }
+        protected AssetManager AssetManager { get; private set; }
+        protected StorageManager StorageManager { get; private set; }
 
-        public virtual void Draw(Canvas canvas) { }
+        public void SetComponents(ContextBase context)
+        {
+            Canvas = context.Canvas;
+            InputController = context.InputController;
+            AssetManager = context.AssetManager;
+            StorageManager = context.StorageManager;
+        }
+
+        public virtual void Initialize() { }
+
+        public virtual void Dispose() { }
+
+        public virtual void Update(GameTime gameTime) { }
+
+        public virtual void Draw(GameTime gameTime) { }
     }
 
     public class CoordinateTransformContextElement : ContextElement
     {
         CoordinateTransform transform;
 
-        public override void Draw(Canvas canvas)
+        public override void Draw(GameTime gameTime)
         {
             if (transform != null)
-                canvas.PushTransform(transform);
+                Canvas.PushTransform(transform);
         }
 
         protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode)
@@ -48,14 +66,14 @@ namespace Ribbons.Context
     {
         Sprite sprite;
 
-        public override void Update(InputController inputController)
+        public override void Update(GameTime gameTime)
         {
             sprite.Update();
         }
 
-        public override void Draw(Canvas canvas)
+        public override void Draw(GameTime gametime)
         {
-            canvas.DrawSprite(sprite);
+            Canvas.DrawSprite(sprite);
         }
 
         #region LayoutBase

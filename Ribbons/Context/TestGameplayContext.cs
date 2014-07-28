@@ -11,10 +11,11 @@ using Ribbons.Engine.Ground;
 using Ribbons.Engine;
 using Ribbons.Utils;
 using Ribbons.Graphics;
+using Ribbons.Content;
 
 namespace Ribbons.Context
 {
-    public class TestGameplayContext : ContextBase
+    public class TestGameplayContext : ContextElement
     {
         World world;
         Player player;
@@ -57,14 +58,14 @@ namespace Ribbons.Context
         public override void Draw(GameTime gameTime)
         {
             Canvas.PushTransform(transform);
-            Canvas.BeginDraw();
             player.Draw(Canvas);
             foreach (Ground g in ground)
             {
                 g.Draw(Canvas);
             }
-            Canvas.EndDraw();
             Canvas.PopTransform();
         }
+
+        protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode) { return false; }
     }
 }
