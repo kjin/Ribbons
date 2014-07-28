@@ -52,7 +52,9 @@
     <Compile Include="Context\SandboxContext.cs" />
     <Compile Include="Context\TestGameplayContext.cs" />
     <Compile Include="Engine\Ground\Ground.cs" />
+    <Compile Include="Engine\Interfaces.cs" />
     <Compile Include="Engine\Ribbon.cs" />
+    <Compile Include="Engine\RibbonTypes\UnloopedRibbon.cs" />
     <Compile Include="Engine\UnboundedObject.cs" />
     <Compile Include="Engine\UserData.cs" />
     <Compile Include="GameConstants.cs" />
@@ -100,9 +102,7 @@
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engine\RibbonTypes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Farseer Physics Engine 3.5\Farseer Physics MonoGame.csproj">
       <Project>{0aad36e3-51a5-4a07-ab60-5c8a66bd38b7}</Project>
