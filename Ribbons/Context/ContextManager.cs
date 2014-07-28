@@ -12,9 +12,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Ribbons.Context
 {
-    public class ContextManager
+    public class ContextManager : LayoutBase
     {
-        ContextBase currentContext;
+        List<ContextBase> contexts;
+        int currentContext;
         float currentOverlayAlpha;
         float targetOverlayAlpha;
         bool exitGame;
@@ -31,60 +32,86 @@ namespace Ribbons.Context
             canvas = new Canvas(assets, graphicsDevice, spriteBatch);
             input = new InputController(assets);
             storage = new StorageManager();
-        }
-
-        public void SetInitialContext(ContextBase context)
-        {
-            InitializeContextComponents(context);
-            currentContext = context;
-        }
-
-        void InitializeContextComponents(ContextBase gameContext)
-        {
-            if (gameContext == null)
-                return;
-            gameContext.AssetManager = assets;
-            gameContext.Canvas = canvas;
-            gameContext.InputController = input;
-            gameContext.StorageManager = storage;
-            gameContext.Initialize();
+            LayoutTree layoutTree = LayoutEngine.BuildLayout(assets.GetText("mockup"));
+            Integrate(assets, layoutTree.Root);
         }
 
         public void Update(GameTime gameTime)
         {
             input.Update();
             canvas.DisplayDebugInformation = input.Debug.JustPressed;
-            if (currentContext.Exit || currentContext.NextContext != null)
+            if (contexts[currentContext].Exit || contexts[currentContext].NextContext != -1)
             {
                 targetOverlayAlpha = 1;
                 if (currentOverlayAlpha == 1)
                 {
                     //audioPlayer.StopSong();
-                    if (currentContext.Exit)
+                    if (contexts[currentContext].Exit)
                         exitGame = true;
                     else
                     {
-                        InitializeContextComponents(currentContext.NextContext);
-                        currentContext.Dispose();
-                        currentContext = currentContext.NextContext;
+                        int oldContext = currentContext;
+                        currentContext = contexts[currentContext].NextContext;
+                        contexts[oldContext].Dispose();
+                        contexts[currentContext].Initialize();
                     }
                 }
             }
             else
             {
-                currentContext.Update(gameTime);
+                contexts[currentContext].Update(gameTime);
             }
         }
 
         public void Draw(GameTime gameTime)
         {
-            currentContext.Draw(gameTime);
+            contexts[currentContext].Draw(gameTime);
             bool leftoverTransforms = canvas.PopAllTransforms();
 #if DEBUG
             if (leftoverTransforms)
-                Console.WriteLine("WARNING: Not all transforms were popped off the canvas stack.\n" +
+                Console.WriteLine("ContextManager WARNING: Not all transforms were popped off the canvas stack.\n" +
                                   "    If you see this message, please check the Draw() function in the currently running context.");
 #endif
         }
+
+        #region LayoutBase
+        protected override void IntegrationPreprocess(LayoutTreeNode node)
+        {
+            contexts = new List<ContextBase>(node.Children.Count);
+        }
+        
+        protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode)
+        {
+            switch (childNode.Key)
+            {
+                case "InitialContext":
+                    for (int i = 0; i < contexts.Count; i++)
+                    {
+                        if (contexts[i].LayoutName == childNode.Value)
+                        {
+                            currentContext = i;
+                            return true;
+                        }
+                    }
+                    Console.WriteLine("LayoutEngine WARNING: Couldn't find a context named {0}. Make sure the context has been created first.", childNode.Value);
+                    return true;
+                case "Contexts":
+                    ContextBase gameContext = new ContextBase();
+                    gameContext.AssetManager = assets;
+                    gameContext.Canvas = canvas;
+                    gameContext.InputController = input;
+                    gameContext.StorageManager = storage;
+                    gameContext.Integrate(assets, childNode);
+                    contexts.Add(gameContext);
+                    return true;
+            }
+            return false;
+        }
+
+        protected override void IntegrationPostprocess(LayoutTreeNode node)
+        {
+            contexts[currentContext].Initialize();
+        }
+        #endregion
     }
 }
