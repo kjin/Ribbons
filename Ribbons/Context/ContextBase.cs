@@ -71,6 +71,9 @@ namespace Ribbons.Context
                         case "SpriteContextElement":
                             contextElement = new SpriteContextElement();
                             break;
+                        case "TextContextElement":
+                            contextElement = new TextContextElement();
+                            break;
                         case "CoordinateTransformContextElement":
                             contextElement = new CoordinateTransformContextElement();
                             break;

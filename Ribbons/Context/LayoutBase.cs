@@ -21,7 +21,7 @@ namespace Ribbons.Context
             //Verify that we're working with the right class
             String typeName = GetType().Name;
             if (typeName != node.Value)
-                Console.WriteLine("LayoutEngine WARNING: We were given {0} but expected {1}.", typeName, node.Value);
+                Console.WriteLine("LayoutEngine WARNING: We were given {0} but expected {1}.", node.Value, typeName);
 #endif
             foreach (LayoutTreeNode childNode in node.Children)
             {
