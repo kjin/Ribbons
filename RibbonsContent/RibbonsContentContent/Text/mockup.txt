@@ -1,15 +1,19 @@
-# Ribbons
-Game = ContextManager
+Ribbons = ContextManager
 {
     Contexts[TitleContext] = ContextBase
     {
-        BGColor = 0x000000;
+        BGColor = (0, 0, 0);
+        ContextElements[UITransform] = CoordinateTransformContextElement
+        {
+            Transform = UITransform;
+        }
         ContextElements[TitleCard] = SpriteContextElement
         {
-            Texture = "RibbonsTitleCard";
+            Texture = "TitleScreen/TitleCard";
             Position = (0.5, 0.5);
             Anchor = Center;
-            # Rotation defaults to zero, and scale defaults to 1.
+            Scale = (0.25, 0.25);
+            # Rotation defaults to zero.
         }
     }
 }
