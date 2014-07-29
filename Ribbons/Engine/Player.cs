@@ -186,7 +186,7 @@ namespace Ribbons.Engine
 
         #region Update
 
-        public override void Update()
+        public override void Update(float dt)
         {
             // update jumpVelocity variable based on jump inputs
             UpdateJump();
@@ -195,7 +195,7 @@ namespace Ribbons.Engine
             UpdateVelocity();
 
             // update physics body velocity
-            base.Update();
+            base.Update(dt);
 
             // reset values for next update
             UpdateEnd();

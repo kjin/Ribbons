@@ -219,7 +219,7 @@ namespace Ribbons.Engine
 
         #region IUpdate
 
-        public virtual void Update()
+        public virtual void Update(float dt)
         {
             //updates speed local variable
             UpdateSpeed();

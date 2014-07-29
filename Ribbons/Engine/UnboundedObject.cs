@@ -114,7 +114,7 @@ namespace Ribbons.Engine
         /// Updates the physical body's velocity.
         /// Make sure child calls ChangeVelocity before calling Update to change velocity
         /// </summary>
-        public virtual void Update()
+        public virtual void Update(float dt)
         {
             // get the physics body velocity and correct for ribbon movement
             Vector2 velocity = RelativeVelocity;
@@ -125,7 +125,7 @@ namespace Ribbons.Engine
             // update values
             velocityChange = new Vector2(0, 0);
             prevRibbonSpeed = ribbonSpeed;
-            UpdateRibbonSpeed();
+            UpdateRibbonSpeed(dt);
 
             // set the changed physics body velocity
             RelativeVelocity = velocity;
@@ -135,7 +135,7 @@ namespace Ribbons.Engine
         /// Looks at all ribbon features that are touched,
         /// and updates the ribbon speed accordingly (and start and end position)
         /// </summary>
-        private void UpdateRibbonSpeed()
+        private void UpdateRibbonSpeed(float dt)
         {
             foreach (Fixture f in landedFixtures)
             {
@@ -144,8 +144,8 @@ namespace Ribbons.Engine
 
                 if (o is IRibbonSpeed)
                 {
-                    IRibbonSpeed ribbon = (IRibbonSpeed)o;
-                    ribbonSpeed = ribbon.RibbonSpeed(body.Position);
+                    IRibbonSpeed ribbon = (IRibbonSpeed) o;
+                    ribbonSpeed = ribbon.RibbonSpeed(body.Position)/dt;
                     return;
                 }
             }

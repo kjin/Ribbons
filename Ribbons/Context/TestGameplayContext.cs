@@ -62,11 +62,13 @@ namespace Ribbons.Context
 
         public override void Update(GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             transform.Update();
-            forceController.Update();
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
-            player.Update();
-            ribbon.Update();
+            forceController.Update(dt);
+            world.Step(dt);
+            player.Update(dt);
+            ribbon.Update(dt);
         }
 
         public override void Draw(GameTime gameTime)

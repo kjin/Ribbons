@@ -14,7 +14,7 @@ namespace Ribbons.Engine
     /// </summary>
     public interface IUpdate
     {
-        void Update();
+        void Update(float dt);
     }
 
     /// <summary>

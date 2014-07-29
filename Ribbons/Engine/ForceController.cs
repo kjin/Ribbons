@@ -24,7 +24,7 @@ namespace Ribbons.Engine
         /// <summary>
         /// Polls input and notifies player and ribbon.
         /// </summary>
-        public void Update()
+        public void Update(float dt)
         {
             // seamstress input:
             if (inputController.SeamstressLeft.Pressed)
