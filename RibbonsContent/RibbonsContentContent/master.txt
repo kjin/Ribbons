@@ -30,5 +30,5 @@ Ribbons = ContextManager
         )
     ),
     Contexts[GameContext] = Context(BGColor = [0, 0, 0], ContextElements[Engine] = Gameplay),
-    InitialContext = TitleContext
+    InitialContext = GameContext
 )

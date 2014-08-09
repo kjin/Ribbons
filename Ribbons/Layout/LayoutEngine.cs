@@ -101,8 +101,8 @@ namespace Ribbons.Layout
             Parse(processed.ToString(), dummy);
             LayoutTree layoutTree = new LayoutTree();
             layoutTree.Root = dummy.Children.First.Value;
-            Console.WriteLine(layoutTree.RepresentativeString);
 #if DEBUG
+            Console.WriteLine("------------\r\n" + layoutTree.RepresentativeString + "------------");
             if (dummy.Children.Count > 1)
                 Console.WriteLine("LayoutEngine WARNING: {0} top-level nodes found... the last {1} will be ignored.", dummy.Children.Count, dummy.Children.Count - 1);
 #endif
