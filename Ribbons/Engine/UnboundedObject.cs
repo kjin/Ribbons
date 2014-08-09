@@ -23,6 +23,10 @@ namespace Ribbons.Engine
         // physics body
         protected Body body;
 
+        // fixture that keeps track of all IRibbonSpeed objects collided with
+        protected Fixture landingFixture;
+        protected List<Fixture> landedFixtures = new List<Fixture>();
+
         // for changing speed
         private Vector2 velocityChange;
 
@@ -37,6 +41,29 @@ namespace Ribbons.Engine
         protected UnboundedObject()
         {
 
+        }
+
+        #endregion
+
+        #region Initialize
+
+        /// <summary>
+        /// Called by child; initializes properties of the unbounded object
+        /// landedFixture must have been initialized first
+        /// </summary>
+        protected void InitializeUnbounded()
+        {
+            if (landingFixture == null)
+            {
+#if DEBUG
+                throw new Exception("unbounded object initialized incorrectly");
+#endif
+                return;
+            }
+
+            landingFixture.IsSensor = true;
+            landingFixture.OnCollision += OnLandingCollision;
+            landingFixture.OnSeparation += OnLandingSeparation;
         }
 
         #endregion
@@ -59,21 +86,35 @@ namespace Ribbons.Engine
 
         #endregion
 
-        #region Ribbon Methods
+        #region OnLandingCollision
 
-        /// <summary>
-        /// It is any ribbon or ribbon element's responsibility to update an unbounded object's speed.
-        /// </summary>
-        public Vector2 RibbonSpeed
+        private bool OnLandingCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
-            set { ribbonSpeed = value; }
+            if (!landedFixtures.Contains(fixtureB))
+            {
+                landedFixtures.Add(fixtureB);
+            }
+
+            return true;
+        }
+
+        private void OnLandingSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+            if (landedFixtures.Contains(fixtureB))
+            {
+                landedFixtures.Remove(fixtureB);
+            }
         }
 
         #endregion
 
         #region Update
 
-        public virtual void Update()
+        /// <summary>
+        /// Updates the physical body's velocity.
+        /// Make sure child calls ChangeVelocity before calling Update to change velocity
+        /// </summary>
+        public virtual void Update(float dt)
         {
             // get the physics body velocity and correct for ribbon movement
             Vector2 velocity = RelativeVelocity;
@@ -84,10 +125,32 @@ namespace Ribbons.Engine
             // update values
             velocityChange = new Vector2(0, 0);
             prevRibbonSpeed = ribbonSpeed;
-            ribbonSpeed = new Vector2(0,0);
+            UpdateRibbonSpeed(dt);
 
             // set the changed physics body velocity
             RelativeVelocity = velocity;
+        }
+
+        /// <summary>
+        /// Looks at all ribbon features that are touched,
+        /// and updates the ribbon speed accordingly (and start and end position)
+        /// </summary>
+        private void UpdateRibbonSpeed(float dt)
+        {
+            foreach (Fixture f in landedFixtures)
+            {
+                UserData userData = (UserData)f.UserData;
+                Object o = userData.thing;
+
+                if (o is IRibbonSpeed)
+                {
+                    IRibbonSpeed ribbon = (IRibbonSpeed) o;
+                    ribbonSpeed = ribbon.RibbonSpeed(body.Position)/dt;
+                    return;
+                }
+            }
+
+            ribbonSpeed = new Vector2(0, 0);
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace Ribbons.Engine
     /// <summary>
     /// Polls input for Seamstress and Ribbon related button presses, and notifies those objects appropriately.
     /// </summary>
-    public class ForceController
+    public class ForceController : IUpdate
     {
         private InputController inputController;
         private Player player;
@@ -24,7 +24,7 @@ namespace Ribbons.Engine
         /// <summary>
         /// Polls input and notifies player and ribbon.
         /// </summary>
-        public void Update()
+        public void Update(float dt)
         {
             // seamstress input:
             if (inputController.SeamstressLeft.Pressed)
@@ -46,17 +46,20 @@ namespace Ribbons.Engine
             }
 
             // TODO: ribbon input
-            if (inputController.RibbonLeft.Pressed)
+            if (player.Ribbon != null)
             {
-                player.Ribbon.MoveLeft(inputController.RibbonLeft.Value);
-            }
-            if (inputController.RibbonRight.Pressed)
-            {
-                player.Ribbon.MoveRight(inputController.RibbonRight.Value);
-            }
-            if (inputController.RibbonFlip.Pressed)
-            {
-                player.RibbonFlip();
+                if (inputController.RibbonLeft.Pressed)
+                {
+                    player.Ribbon.MoveLeft(inputController.RibbonLeft.Value);
+                }
+                if (inputController.RibbonRight.Pressed)
+                {
+                    player.Ribbon.MoveRight(inputController.RibbonRight.Value);
+                }
+                if (inputController.RibbonFlip.Pressed)
+                {
+                    player.RibbonFlip();
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ using Ribbons.Graphics;
 
 namespace Ribbons.Engine
 {
-    public class Player : UnboundedObject
+    public class Player : UnboundedObject, IUpdate
     {
         #region Fields
 
@@ -27,9 +27,6 @@ namespace Ribbons.Engine
         private bool startJump = false;
         private bool continueJump = false;
 
-        // grounded state
-        private List<Fixture> landedFixtures = new List<Fixture>();
-
         // keep track of jump
         // (1 through INITJUMP is starting to jump, 
         // INITJUMP to JUMPCOOLDOWN is unable to jump)
@@ -37,10 +34,13 @@ namespace Ribbons.Engine
         private float jumpVelocity = 0;
 
         // The ribbon currently under control
-        private Ribbon ribbons;
+        private Ribbon ribbon;
 
         // fields from UnboundedObject:
         //Body body;
+        //
+        //Fixture landingFixture;
+        //List<Fixture> landedFixtures = new List<Fixture>();
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace Ribbons.Engine
 
         public Ribbon Ribbon
         {
-            get { return Ribbon; }
+            get { return ribbon; }
         }
 
         #endregion
@@ -71,10 +71,11 @@ namespace Ribbons.Engine
             bodyFixture.Friction = PlayerConstants.FRICTION;
 
             // create the landing fixture
-            Fixture landingFixture = body.CreateFixture(CreateLandingShape(), userData);
+            landingFixture = body.CreateFixture(CreateLandingShape(), userData);
             landingFixture.IsSensor = true;
             landingFixture.OnCollision += OnLandingCollision;
-            landingFixture.OnSeparation += OnLandingSeparation;
+
+            InitializeUnbounded();
         }
 
         /// <summary>
@@ -170,29 +171,22 @@ namespace Ribbons.Engine
 
         #region OnLandingCollision
 
-        bool OnLandingCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        private bool OnLandingCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
-            if (!landedFixtures.Contains(fixtureB))
+            UserData userData = (UserData)fixtureB.UserData;
+            if (userData.thing is IRibbonSpeed)
             {
-                landedFixtures.Add(fixtureB);
+                ribbon = ((IRibbonSpeed)userData.thing).GetRibbon();
             }
 
             return true;
-        }
-
-        void OnLandingSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            if (landedFixtures.Contains(fixtureB))
-            {
-                landedFixtures.Remove(fixtureB);
-            }
         }
 
         #endregion
 
         #region Update
 
-        public override void Update()
+        public override void Update(float dt)
         {
             // update jumpVelocity variable based on jump inputs
             UpdateJump();
@@ -201,7 +195,7 @@ namespace Ribbons.Engine
             UpdateVelocity();
 
             // update physics body velocity
-            base.Update();
+            base.Update(dt);
 
             // reset values for next update
             UpdateEnd();

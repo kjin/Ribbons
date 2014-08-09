@@ -11,6 +11,7 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 using Ribbons.Graphics;
+using Ribbons.Engine.RibbonTypes;
 using Ribbons.Content.Level;
 
 namespace Ribbons.Engine
@@ -18,7 +19,7 @@ namespace Ribbons.Engine
     /// <summary>
     /// Ribbons can be updated and drawn to the screen.
     /// </summary>
-    public abstract class Ribbon
+    public abstract class Ribbon : IUpdate, IDraw, IRibbonSpeed
     {
         #region Fields
 
@@ -27,13 +28,14 @@ namespace Ribbons.Engine
         protected Queue<Fixture> fixtures = new Queue<Fixture>();
 
         //list of points describing the ribbon path
-        protected List<Vector2> points = new List<Vector2>();
+        protected List<Vector2> points;
 
         //list of vectors describing the ribbon orientation between points
         protected List<Vector2> orientations = new List<Vector2>();
 
         //list of lengths between points
-        protected List<float> lengths = new List<float>();
+        protected List<float> intervals = new List<float>();
+        protected float length = 0; //total length of the ribbon
 
         //the speed the ribbon is currently moving at
         protected float speed = 0;
@@ -50,11 +52,134 @@ namespace Ribbons.Engine
 
         #endregion
 
+        #region Constructor
+
+        protected Ribbon(World world, List<Vector2> path, float start, float end)
+        {
+            this.points = path;
+            this.start = start;
+            this.end = end;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector2 v = points[(i + 1) % points.Count] - points[i];
+                v.Normalize();
+                orientations.Add(v);
+
+                float dist = Vector2.Distance(points[i], points[(i + 1) % points.Count]);
+                length += dist;
+                intervals.Add(dist);
+            }
+
+            UserData userData = new UserData();
+            userData.thing = this;
+
+            body = new Body(world);
+            body.UserData = userData;
+            body.IsStatic = true;
+        }
+
+        #endregion
+
+        #region Initialize
+
+        /// <summary>
+        /// Creates the initial fixture for the ribbon.
+        /// </summary>
+        protected void InitializeRibbon()
+        {
+            UserData userData = new UserData();
+            userData.thing = this;
+
+            Shape shape = GenerateShape();
+            fixtures.Enqueue(body.CreateFixture(shape, userData));
+        }
+
+        #endregion
+
         #region Protected Methods
 
-        public bool IsDiscrete
+        protected bool IsDiscrete
         {
             get { return Math.Abs(Math.Round(start) - start) < RibbonConstants.DISCRETETHRESHOLD; }
+        }
+
+        /// <summary>
+        /// Converts a spacial position to distance along the ribbon.
+        /// Assumes looped ribbon (can be overwritten)
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        protected virtual float GetDistanceAlongRibbonFromPosition(Vector2 position)
+        {
+            float totalPos = 0;
+            float bestPos = 0;
+            float minDist = float.MaxValue;
+
+            //for each interval:
+            for (int i = 0; i < points.Count(); i++)
+            {
+                //find what distance along the interval is the closest
+                Vector2 A = position - points[i];
+                Vector2 B = points[(i + 1) % points.Count] - points[i];
+
+                float pos = Vector2.Dot(A, B) / B.Length();
+                if (i > 0)
+                {
+                    pos = Math.Max(pos, 0);
+                }
+                if (i + 1 < points.Count)
+                {
+                    pos = Math.Min(pos, intervals[i]);
+                }
+
+                //get the position of that point
+                Vector2 p = pos * orientations[i] + points[i];
+                pos += totalPos;
+
+                //see if it's the closest we've seen so far
+                if (Vector2.DistanceSquared(p, position) < minDist)
+                {
+                    minDist = Vector2.DistanceSquared(p, position);
+                    bestPos = pos;
+                }
+
+                //keep track of how far along the line we've moved
+                totalPos += intervals[i];
+            }
+
+            return bestPos;
+        }
+
+        /// <summary>
+        /// Converts distance along the ribbon to an orientation.
+        /// Assumes looped ribbon (can be overwritten)
+        /// </summary>
+        /// <param name="dist"></param>
+        /// <returns></returns>
+        protected virtual Vector2 GetOrientationFromDistanceAlongRibbon(float dist)
+        {
+            int i = 0;
+
+            //correct for negative distances
+            while (dist < 0)
+            {
+                dist += length;
+            }
+
+            //continue until we find the appropriate interval
+            while (intervals[i] < dist)
+            {
+                dist -= intervals[i];
+                i++;
+                while (i >= orientations.Count())
+                {
+                    i = i - intervals.Count();
+                }
+            }
+
+            return orientations[i];
+
         }
 
         #endregion
@@ -66,15 +191,6 @@ namespace Ribbons.Engine
         /// </summary>
         /// <returns></returns>
         protected abstract Shape GenerateShape();
-
-        #endregion
-
-        #region Constructor
-
-        protected Ribbon(List<Vector2> path, float start, float end)
-        {
-
-        }
 
         #endregion
 
@@ -101,9 +217,9 @@ namespace Ribbons.Engine
 
         #endregion
 
-        #region Update
+        #region IUpdate
 
-        public virtual void Update()
+        public virtual void Update(float dt)
         {
             //updates speed local variable
             UpdateSpeed();
@@ -119,7 +235,7 @@ namespace Ribbons.Engine
         }
 
         /// <summary>
-        /// Updates speed based on latest input and discrete pulling
+        /// Updates speed (and start/end position) based on latest input and discrete pulling
         /// </summary>
         protected virtual void UpdateSpeed()
         {
@@ -163,26 +279,43 @@ namespace Ribbons.Engine
 
                 holdMovement = 0;
             }
+
+            if (Math.Abs(speed) < RibbonConstants.STILLTHRESHOLD)
+            {
+                speed = 0;
+            }
+
+            start += speed;
+            end += speed;
         }
 
         /// <summary>
-        /// Updates physical fixtures
+        /// Updates physical fixtures.
         /// </summary>
         protected virtual void UpdateBody()
         {
-            /*
+            //if not moving
             if (Math.Abs(speed) < RibbonConstants.STILLTHRESHOLD)
             {
-                while(fixtures.Count > 1)
+                //if the ribbon isn't moving, we don't need so many fixtures
+                while (fixtures.Count > 1)
                 {
-                    fixtures.Po
+                    (fixtures.Dequeue()).Dispose();
+                }
             }
             else
             {
+                UserData userData = new UserData();
+                userData.thing = this;
 
+                Shape shape = GenerateShape();
+                fixtures.Enqueue(body.CreateFixture(shape, userData));
 
-            }
-             * */
+                while (fixtures.Count > RibbonConstants.FIXTUREOVERLAY)
+                {
+                    (fixtures.Dequeue()).Dispose();
+                }
+            }            
         }
 
         /// <summary>
@@ -205,21 +338,37 @@ namespace Ribbons.Engine
 
         #endregion
 
-        #region Draw
+        #region IDraw
+
         public abstract void Draw(Canvas c);
 
         #endregion
 
-        #region RibbonFactory
+        #region IRibbonSpeed
 
-        public static class RibbonFactory
+        public Vector2 RibbonSpeed(Vector2 position)
         {
-            public static Ribbon Get(RibbonStorage ribbonStorage)
-            {
-                return null;
-            }
+            float distanceAlongRibbon = GetDistanceAlongRibbonFromPosition(position);
+            return speed * GetOrientationFromDistanceAlongRibbon(distanceAlongRibbon);
+        }
+
+        public Ribbon GetRibbon()
+        {
+            return this;
         }
 
         #endregion
     }
+
+    #region RibbonFactory
+
+    public static class RibbonFactory
+    {
+        public static Ribbon Get(World world, RibbonStorage ribbonStorage)
+        {
+            return new UnloopedRibbon(world, ribbonStorage.Path, ribbonStorage.Start, ribbonStorage.End);
+        }
+    }
+
+    #endregion
 }
