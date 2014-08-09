@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ribbons.Context
+namespace Ribbons.Layout
 {
     public class LayoutTree
     {

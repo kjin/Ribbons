@@ -7,6 +7,7 @@ using Ribbons.Content;
 using Ribbons.Utils;
 using Ribbons.Input;
 using Ribbons.Storage;
+using Ribbons.Layout;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,13 +15,15 @@ namespace Ribbons.Context
 {
     public abstract class ContextElement : LayoutBase
     {
+        protected Context UnderlyingContext { get; private set; }
         protected Canvas Canvas { get; private set; }
         protected InputController InputController { get; private set; }
         protected AssetManager AssetManager { get; private set; }
         protected StorageManager StorageManager { get; private set; }
 
-        public void SetComponents(ContextBase context)
+        public void SetComponents(Context context)
         {
+            UnderlyingContext = context;
             Canvas = context.Canvas;
             InputController = context.InputController;
             AssetManager = context.AssetManager;
@@ -39,11 +42,27 @@ namespace Ribbons.Context
     public class CoordinateTransformContextElement : ContextElement
     {
         CoordinateTransform transform;
+        List<ContextElement> elements;
+
+        public CoordinateTransformContextElement()
+        {
+            elements = new List<ContextElement>();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (ContextElement e in elements)
+                e.Update(gameTime);
+        }
 
         public override void Draw(GameTime gameTime)
         {
             if (transform != null)
                 Canvas.PushTransform(transform);
+            foreach (ContextElement e in elements)
+                e.Draw(gameTime);
+            if (transform != null)
+                Canvas.PopTransform();
         }
 
         protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode)
@@ -56,6 +75,16 @@ namespace Ribbons.Context
                         case "UITransform":
                             transform = new UITransform();
                             return true;
+                    }
+                    break;
+                case "Elements":
+                    ContextElement contextElement = ContextHelper.ContextFromName(childNode.Value);
+                    if (contextElement != null)
+                    {
+                        contextElement.SetComponents(UnderlyingContext);
+                        contextElement.Integrate(assets, childNode);
+                        elements.Add(contextElement);
+                        return true;
                     }
                     break;
             }

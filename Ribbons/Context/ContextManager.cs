@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ribbons.Content;
+using Ribbons.Layout;
 using Ribbons.Graphics;
 using Ribbons.Input;
 using Ribbons.Storage;
+using Ribbons.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +15,7 @@ namespace Ribbons.Context
 {
     public class ContextManager : LayoutBase
     {
-        List<ContextBase> contexts;
+        List<Context> contexts;
         int currentContext;
         float currentOverlayAlpha;
         float targetOverlayAlpha;
@@ -34,6 +35,7 @@ namespace Ribbons.Context
             storage = new StorageManager();
             LayoutTree layoutTree = LayoutEngine.BuildLayout(content.Load<Text>("master"));
             Integrate(assets, layoutTree.Root);
+            assets.GetLevel("Level1");
         }
 
         public void Update(GameTime gameTime)
@@ -77,7 +79,7 @@ namespace Ribbons.Context
         #region LayoutBase
         protected override void IntegrationPreprocess(LayoutTreeNode node)
         {
-            contexts = new List<ContextBase>(node.Children.Count);
+            contexts = new List<Context>(node.Children.Count);
         }
         
         protected override bool IntegrateChild(AssetManager assets, LayoutTreeNode childNode)
@@ -96,7 +98,7 @@ namespace Ribbons.Context
                     Console.WriteLine("LayoutEngine WARNING: Couldn't find a context named {0}. Make sure the context has been created first.", childNode.Value);
                     return true;
                 case "Contexts":
-                    ContextBase gameContext = new ContextBase();
+                    Context gameContext = new Context();
                     gameContext.AssetManager = assets;
                     gameContext.Canvas = canvas;
                     gameContext.InputController = input;

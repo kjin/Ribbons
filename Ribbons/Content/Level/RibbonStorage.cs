@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Ribbons.Context;
+using Ribbons.Layout;
 using Ribbons.Utils;
 
 namespace Ribbons.Content.Level
@@ -26,11 +26,11 @@ namespace Ribbons.Content.Level
             switch (childNode.Key)
             {
                 case "Path":
-                    Path.Add(ExtendedConvert.ToVector2(childNode.Value));
 #if DEBUG
                     if (Convert.ToInt32(childNode.KeyExtension) != Path.Count)
                         Console.WriteLine("LevelBuilder WARNING: Ribbon path points are not in order.");
 #endif
+                    Path.Add(ExtendedConvert.ToVector2(childNode.Value));
                     return true;
                 case "Start":
                     Start = Convert.ToSingle(childNode.Value);

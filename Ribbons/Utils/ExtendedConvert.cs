@@ -10,8 +10,8 @@ namespace Ribbons.Utils
     {
         public static Vector2 ToVector2(string value)
         {
-            value = value.Replace('(', ' ');
-            value = value.Replace(')', ' ');
+            value = value.Replace('[', ' ');
+            value = value.Replace(']', ' ');
             value = value.Trim();
             string[] components = value.Split(',');
             if (components.Length < 2)
@@ -21,8 +21,8 @@ namespace Ribbons.Utils
 
         public static Vector3 ToVector3(string value)
         {
-            value = value.Replace('(', ' ');
-            value = value.Replace(')', ' ');
+            value = value.Replace('[', ' ');
+            value = value.Replace(']', ' ');
             value = value.Trim();
             string[] components = value.Split(',');
             if (components.Length < 3)
@@ -32,8 +32,8 @@ namespace Ribbons.Utils
 
         public static Vector4 ToVector4(string value)
         {
-            value = value.Replace('(', ' ');
-            value = value.Replace(')', ' ');
+            value = value.Replace('[', ' ');
+            value = value.Replace(']', ' ');
             value = value.Trim();
             string[] components = value.Split(',');
             if (components.Length < 4)

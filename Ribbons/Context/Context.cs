@@ -7,11 +7,12 @@ using Ribbons.Graphics;
 using Ribbons.Input;
 using Ribbons.Storage;
 using Ribbons.Utils;
+using Ribbons.Layout;
 using Microsoft.Xna.Framework;
 
 namespace Ribbons.Context
 {
-    public class ContextBase : LayoutBase
+    public class Context : LayoutBase
     {
         Color BackgroundColor;
         List<ContextElement> elements;
@@ -48,7 +49,6 @@ namespace Ribbons.Context
             for (int i = 0; i < elements.Count; i++)
                 elements[i].Draw(gameTime);
             Canvas.EndDraw();
-            Canvas.PopAllTransforms();
         }
 
         #region LayoutBase
@@ -64,23 +64,8 @@ namespace Ribbons.Context
                 case "BGColor":
                     BackgroundColor = ExtendedConvert.ToColor(childNode.Value);
                     return true;
-                case "ContextElements":
-                    ContextElement contextElement = null;
-                    switch (childNode.Value)
-                    {
-                        case "SpriteContextElement":
-                            contextElement = new SpriteContextElement();
-                            break;
-                        case "TextContextElement":
-                            contextElement = new TextContextElement();
-                            break;
-                        case "CoordinateTransformContextElement":
-                            contextElement = new CoordinateTransformContextElement();
-                            break;
-                        case "GameplayContextElement":
-                            contextElement = new TestGameplayContext();
-                            break;
-                    }
+                case "Elements":
+                    ContextElement contextElement = ContextHelper.ContextFromName(childNode.Value);
                     if (contextElement != null)
                     {
                         contextElement.SetComponents(this);

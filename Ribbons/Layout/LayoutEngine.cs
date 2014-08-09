@@ -4,10 +4,35 @@ using System.Linq;
 using System.Text;
 using Ribbons.Content;
 
-namespace Ribbons.Context
+namespace Ribbons.Layout
 {
     public static class LayoutEngine
     {
+        public static Text SaveLayout(LayoutTree layout)
+        {
+            List<string> strings = new List<string>();
+            SaveNode(layout.Root, strings, "");
+            return new Text(strings.ToArray());
+        }
+
+        static void SaveNode(LayoutTreeNode node, List<string> strings, string indent)
+        {
+            strings.Add(String.Format("{0}{1}{2} = {3}{4}",
+                                indent,
+                                node.Key,
+                                node.KeyExtension != null ? String.Format("[{0}]", node.KeyExtension) : "",
+                                node.Value,
+                                node.Children.Count == 0 ? ";" : ""));
+            if (node.Children.Count > 0)
+            {
+                strings.Add(String.Format("{0}(", indent));
+                string newIndent = indent + "    ";
+                foreach (LayoutTreeNode n in node.Children)
+                    SaveNode(n, strings, newIndent);
+                strings.Add(String.Format("{0})", indent));
+            }
+        }
+
         public static LayoutTree BuildLayout(Text source)
         {
             int length = source.Length;
@@ -15,32 +40,52 @@ namespace Ribbons.Context
             for (int i = 0; i < length; i++)
             {
                 String preprocessed = source[i];
+                // State flags
                 bool quote = false;
+                bool array = false;
+                bool script = false;
                 bool comment = false;
+                bool followsRightBracket = false;
                 // Filter out all non-quote whitespace, turn
                 // semicolons into empty brackets, and clear comments.
                 for (int j = 0; j < preprocessed.Length; j++)
                 {
+                    if (quote && preprocessed[j] != '\"')
+                    {
+                        processed.Append(preprocessed[j]);
+                        continue;
+                    }
                     switch (preprocessed[j])
                     {
                         case '\"':
                             quote = !quote;
                             break;
-                        case ' ':
-                            if (quote)
-                                processed.Append(' ');
+                        case '[':
+                            array = true;
+                            processed.Append('[');
                             break;
-                        case ';':
-                            if (quote)
-                                processed.Append(';');
-                            else
-                                processed.Append("{}");
+                        case ']':
+                            array = false;
+                            processed.Append(']');
+                            break;
+                        case ' ':
+                            break;
+                        case ',':
+                            if (array)
+                                processed.Append(',');
+                            else if (!followsRightBracket)
+                                processed.Append("()");
+                            break;
+                        case ')':
+                            processed.Append("())");
+                            followsRightBracket = true;
                             break;
                         case '#':
                             comment = true;
                             break;
                         default:
                             processed.Append(preprocessed[j]);
+                            followsRightBracket = false;
                             break;
                     }
                     if (comment)
@@ -56,6 +101,7 @@ namespace Ribbons.Context
             Parse(processed.ToString(), dummy);
             LayoutTree layoutTree = new LayoutTree();
             layoutTree.Root = dummy.Children.First.Value;
+            Console.WriteLine(layoutTree.RepresentativeString);
 #if DEBUG
             if (dummy.Children.Count > 1)
                 Console.WriteLine("LayoutEngine WARNING: {0} top-level nodes found... the last {1} will be ignored.", dummy.Children.Count, dummy.Children.Count - 1);
@@ -73,9 +119,9 @@ namespace Ribbons.Context
             for (int i = 0; i < sourceString.Length; i++)
             {
                 length++;
-                if (sourceString[i] == '{')
+                if (sourceString[i] == '(')
                     bracketLevel++;
-                else if (sourceString[i] == '}')
+                else if (sourceString[i] == ')')
                 {
                     // We're about to close the first bracket, so do stuff
                     if (bracketLevel == 1)
@@ -103,8 +149,8 @@ namespace Ribbons.Context
                 if (equals == -1)
                     return;
                 string key = cSourceString.Substring(0, equals);
-                int leftBracket = cSourceString.IndexOf('{');
-                int rightBracket = cSourceString.LastIndexOf('}');
+                int leftBracket = cSourceString.IndexOf('(');
+                int rightBracket = cSourceString.LastIndexOf(')');
                 if (leftBracket == -1 || rightBracket == -1)
                 {
 #if DEBUG
